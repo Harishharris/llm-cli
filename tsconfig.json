@@ -1,0 +1,14 @@
+{
+	"extends": "@sindresorhus/tsconfig",
+	"compilerOptions": {
+		"outDir": "dist",
+		"composite": true,
+	},
+	"include": [
+		"packages/*/src",
+		"packages/cli/index.ts"
+	],
+	"exclude": [
+		"dist"
+	]
+}

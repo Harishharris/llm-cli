@@ -1,0 +1,28 @@
+{
+	"name": "@simple-cli/core",
+	"version": "0.0.0",
+	"private": true,
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"type": "module",
+	"composite": true,
+	"scripts": {
+		"build": "tsc -p tsconfig.json"
+	},
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"composite": true
+	},
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"dist"
+	],
+	"dependencies": {
+		"@google/genai": "^1.4.0"
+	}
+}
