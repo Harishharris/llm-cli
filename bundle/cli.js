@@ -1372,7 +1372,7 @@ var require_react_development = __commonJS({
           }
           return dispatcher.useContext(Context);
         }
-        function useState4(initialState) {
+        function useState6(initialState) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useState(initialState);
         }
@@ -1396,7 +1396,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useLayoutEffect(create2, deps);
         }
-        function useCallback(callback, deps) {
+        function useCallback2(callback, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
@@ -2163,7 +2163,7 @@ var require_react_development = __commonJS({
         exports.memo = memo;
         exports.startTransition = startTransition;
         exports.unstable_act = act;
-        exports.useCallback = useCallback;
+        exports.useCallback = useCallback2;
         exports.useContext = useContext7;
         exports.useDebugValue = useDebugValue;
         exports.useDeferredValue = useDeferredValue;
@@ -2175,7 +2175,7 @@ var require_react_development = __commonJS({
         exports.useMemo = useMemo3;
         exports.useReducer = useReducer;
         exports.useRef = useRef;
-        exports.useState = useState4;
+        exports.useState = useState6;
         exports.useSyncExternalStore = useSyncExternalStore;
         exports.useTransition = useTransition;
         exports.version = ReactVersion;
@@ -27676,7 +27676,7 @@ var require_backend = __commonJS({
                     return function() {
                     };
                   },
-                  useCallback: function useCallback(a) {
+                  useCallback: function useCallback2(a) {
                     var b = C();
                     x.push({
                       primitive: "Callback",
@@ -27770,7 +27770,7 @@ var require_backend = __commonJS({
                     });
                     return a;
                   },
-                  useState: function useState4(a) {
+                  useState: function useState6(a) {
                     var b = C();
                     a = null !== b ? b.memoizedState : "function" === typeof a ? a() : a;
                     x.push({
@@ -84807,16 +84807,26 @@ var GeminiClient = class {
     this.contentGeneratorConfig = config2;
     this.contentGenerator = getContentGenerator(config2);
   }
-  async *sendMessageStreams(request, signal) {
-    const stream = this.contentGenerator.generateContentStream({
-      model: this.model,
-      contents: request
-    });
-    for await (const chunk of stream) {
-      if (signal.signal.aborted) {
-        return;
+  async *sendMessageStream(request, _signal) {
+    console.log("DID I GET REQUEST", request);
+    try {
+      const stream = await this.contentGenerator.generateContentStream({
+        model: this.model,
+        contents: [{ role: "user", parts: [{ text: "who is the ceo of microsoft" + request }] }],
+        config: {
+          thinkingConfig: {
+            thinkingBudget: 0
+          }
+        }
+      });
+      console.log("WHAT IS IT HERE", stream);
+      for await (const event of stream) {
+        yield event;
       }
-      yield chunk;
+      return stream;
+    } catch (err) {
+      console.log("IN ERROR", err);
+      return err;
     }
   }
   getContentGeneratorConfig() {
@@ -84874,7 +84884,7 @@ function main() {
 // packages/cli/src/components/input-prompt.tsx
 var import_react22 = __toESM(require_react(), 1);
 var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-function InputPrompt() {
+function InputPrompt({ onSubmit, setMessages }) {
   const [prompt, setPrompt] = (0, import_react22.useState)("");
   const [_error, setError] = (0, import_react22.useState)(false);
   const [_errMessage, _setErrMessage] = (0, import_react22.useState)("");
@@ -84882,6 +84892,13 @@ function InputPrompt() {
   const placeholder = " Ask your question";
   use_input_default((input, key) => {
     if (key.return) {
+      console.log("ENTERED PROMPT", prompt);
+      if (prompt.trim()) {
+        onSubmit(prompt);
+        setMessages((prev) => [...prev, prompt]);
+        setPrompt("");
+        return;
+      }
       setPrompt("");
       setSubmitted(true);
       setError(false);
@@ -84998,14 +85015,21 @@ var import_react25 = __toESM(require_react(), 1);
 import process13 from "node:process";
 function useAuth({ config: config2 }) {
   const [authError, setAuthError] = (0, import_react25.useState)("");
+  const [_authenticating, setIsAuthenticating] = (0, import_react25.useState)(false);
   const GEMINI_API_KEY = process13.env["GEMINI_API_KEY"];
   (0, import_react25.useEffect)(() => {
-    if (!GEMINI_API_KEY) {
-      setAuthError("Please specify your API_KEY in .env file in the root of the project");
-    }
-    config2.refreshAuth();
-    console.log("in effect", config2.getGeminiClient());
-  }, []);
+    const authFlow = async () => {
+      setIsAuthenticating(true);
+      if (!GEMINI_API_KEY) {
+        setAuthError("Please specify your API_KEY in .env file in the root of the project");
+        return;
+      }
+      await config2.refreshAuth();
+      setAuthError("");
+      setIsAuthenticating(false);
+    };
+    void authFlow();
+  }, [config2]);
   return {
     authError
   };
@@ -85017,19 +85041,67 @@ function AuthError({ authError }) {
   return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Text, { color: "red", children: authError });
 }
 
+// packages/cli/src/hooks/useGeminiStream.ts
+var import_react26 = __toESM(require_react(), 1);
+function useGeminiStream(geminiClient, setMessages) {
+  const [isResponding, setIsResponding] = (0, import_react26.useState)(false);
+  const submitQuery = (0, import_react26.useCallback)(async (query) => {
+    setIsResponding(true);
+    const controller = new AbortController();
+    try {
+      const stream = geminiClient.sendMessageStream(query, controller);
+      const response = await processGeminiStream(stream, controller);
+      console.log("RESPONSE", response);
+    } catch (e) {
+      console.log("ERR", e);
+    } finally {
+      setIsResponding(false);
+    }
+  }, [geminiClient, isResponding, setIsResponding]);
+  async function processGeminiStream(stream, _controller) {
+    for await (const event of stream) {
+      console.log("IS IT HERE", event);
+      setMessages((prev) => [...prev, JSON.stringify(event.candidates[0].content.parts[0].text)]);
+    }
+    return true;
+  }
+  return {
+    submitQuery,
+    isResponding
+  };
+}
+
+// packages/cli/src/hooks/useHistory.ts
+var import_react27 = __toESM(require_react(), 1);
+function uesHistory() {
+  const [messages, setMessages] = (0, import_react27.useState)([]);
+  return {
+    messages,
+    setMessages
+  };
+}
+
 // packages/cli/src/app.tsx
 var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
 function App2({ config: config2 }) {
   const { authError } = useAuth({ config: config2 });
-  console.log("Config:", config2);
+  const { messages, setMessages } = uesHistory();
+  const { submitQuery, isResponding } = useGeminiStream(config2.getGeminiClient(), setMessages);
   return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
     /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Header, {}),
     /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Text, { children: [
       "Hello, ",
       /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { color: "green", children: "Harish" })
     ] }),
+    messages.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Box_default, { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { children: item }) }, index)),
     authError && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(AuthError, { authError }),
-    !authError && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(InputPrompt, {})
+    !authError && !isResponding && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      InputPrompt,
+      {
+        onSubmit: submitQuery,
+        setMessages
+      }
+    )
   ] });
 }
 

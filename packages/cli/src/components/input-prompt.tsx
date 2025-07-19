@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Text, useInput, Box } from "ink";
 
 // interface AddItemProp {
 // 	addItem(mode: "user" | "assistant", input: string): void;
 // }
 
-export function InputPrompt() {
+interface InputPromptProps {
+	onSubmit: (query: string) => void;
+	setMessages: Dispatch<SetStateAction<string[]>>
+}
+
+export function InputPrompt({ onSubmit, setMessages }: InputPromptProps) {
 	const [prompt, setPrompt] = useState('');
 	const [_error, setError] = useState(false)
 	const [_errMessage, _setErrMessage] = useState('');
@@ -15,7 +20,14 @@ export function InputPrompt() {
 
 	useInput((input, key) => {
 		if (key.return) {
+			console.log('ENTERED PROMPT', prompt)
 			// addItem('user', prompt);
+			if (prompt.trim()) {
+				onSubmit(prompt)
+				setMessages(prev => [...prev, prompt])
+				setPrompt('')
+				return;
+			}
 			setPrompt('')
 			setSubmitted(true);
 			setError(false);

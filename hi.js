@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
-	apiKey: process.env.GEMINI_API_KEY,
+	apiKey: "AIzaSyDSUrhHPtL_6vVql2rKznHpP6vtq6Jv5Lw",
 });
 
 async function GeminiClient() {
@@ -29,6 +29,7 @@ async function* handleStream(stream) {
 
 async function main() {
 	const geminiStream = await GeminiClient()
+	console.log(geminiStream)
 	const stream = handleStream(geminiStream);
 	let out = '';
 	for await (const chunk of stream) {

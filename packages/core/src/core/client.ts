@@ -16,16 +16,26 @@ export class GeminiClient {
 		this.contentGenerator = getContentGenerator(config);
 	}
 
-	async *sendMessageStreams(request: string, signal: AbortController) {
-		const stream = this.contentGenerator.generateContentStream({
-			model: this.model,
-			contents: request,
-		})
-		for await (const chunk of stream) {
-			if (signal.signal.aborted) {
-				return;
+	async *sendMessageStream(request: string, _signal: AbortController) {
+		console.log("DID I GET REQUEST", request)
+		try {
+			const stream = await this.contentGenerator.generateContentStream({
+				model: this.model,
+				contents: [{ role: "user", parts: [{ text: 'who is the ceo of microsoft' + request }] }],
+				config: {
+					thinkingConfig: {
+						thinkingBudget: 0,
+					}
+				}
+			})
+			console.log("WHAT IS IT HERE", stream)
+			for await (const event of stream) {
+				yield event
 			}
-			yield chunk;
+			return stream;
+		} catch (err) {
+			console.log("IN ERROR", err)
+			return err;
 		}
 	}
 
