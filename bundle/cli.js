@@ -56488,11 +56488,11 @@ var require_react_jsx_runtime_development = __commonJS({
             return jsxWithValidation(type, props, key, false);
           }
         }
-        var jsx6 = jsxWithValidationDynamic;
-        var jsxs4 = jsxWithValidationStatic;
+        var jsx7 = jsxWithValidationDynamic;
+        var jsxs5 = jsxWithValidationStatic;
         exports.Fragment = REACT_FRAGMENT_TYPE;
-        exports.jsx = jsx6;
-        exports.jsxs = jsxs4;
+        exports.jsx = jsx7;
+        exports.jsxs = jsxs5;
       })();
     }
   }
@@ -66552,6 +66552,25 @@ var getInstance = (stdout, createInstance) => {
 
 // node_modules/ink/build/components/Static.js
 var import_react11 = __toESM(require_react(), 1);
+function Static(props) {
+  const { items, children: render2, style: customStyle } = props;
+  const [index, setIndex] = (0, import_react11.useState)(0);
+  const itemsToRender = (0, import_react11.useMemo)(() => {
+    return items.slice(index);
+  }, [items, index]);
+  (0, import_react11.useLayoutEffect)(() => {
+    setIndex(items.length);
+  }, [items.length]);
+  const children = itemsToRender.map((item, itemIndex) => {
+    return render2(item, index + itemIndex);
+  });
+  const style = (0, import_react11.useMemo)(() => ({
+    position: "absolute",
+    flexDirection: "column",
+    ...customStyle
+  }), [customStyle]);
+  return import_react11.default.createElement("ink-box", { internal_static: true, style }, children);
+}
 
 // node_modules/ink/build/components/Transform.js
 var import_react12 = __toESM(require_react(), 1);
@@ -84808,20 +84827,22 @@ var GeminiClient = class {
     this.contentGenerator = getContentGenerator(config2);
   }
   async *sendMessageStream(request, _signal) {
-    console.log("DID I GET REQUEST", request);
     try {
       const stream = await this.contentGenerator.generateContentStream({
         model: this.model,
-        contents: [{ role: "user", parts: [{ text: "who is the ceo of microsoft" + request }] }],
+        contents: [{ role: "user", parts: [{ text: request }] }],
         config: {
           thinkingConfig: {
             thinkingBudget: 0
           }
         }
       });
-      console.log("WHAT IS IT HERE", stream);
       for await (const event of stream) {
-        yield event;
+        const content = getContent(event);
+        yield {
+          type: "gemini",
+          content
+        };
       }
       return stream;
     } catch (err) {
@@ -84836,6 +84857,17 @@ var GeminiClient = class {
     return this.contentGeneratorConfig;
   }
 };
+function getContent(event) {
+  const parts = event.candidates?.[0]?.content?.parts;
+  if (!parts) {
+    return "";
+  }
+  const text = parts.map((part) => part.text.trim().replace('"', ""));
+  if (text.length === 0) {
+    return "";
+  }
+  return text.join("");
+}
 
 // packages/core/src/core/config.ts
 var Config = class {
@@ -84884,7 +84916,7 @@ function main() {
 // packages/cli/src/components/input-prompt.tsx
 var import_react22 = __toESM(require_react(), 1);
 var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-function InputPrompt({ onSubmit, setMessages }) {
+function InputPrompt({ onSubmit, addItem }) {
   const [prompt, setPrompt] = (0, import_react22.useState)("");
   const [_error, setError] = (0, import_react22.useState)(false);
   const [_errMessage, _setErrMessage] = (0, import_react22.useState)("");
@@ -84892,10 +84924,9 @@ function InputPrompt({ onSubmit, setMessages }) {
   const placeholder = " Ask your question";
   use_input_default((input, key) => {
     if (key.return) {
-      console.log("ENTERED PROMPT", prompt);
       if (prompt.trim()) {
+        addItem({ type: "user", content: prompt });
         onSubmit(prompt);
-        setMessages((prev) => [...prev, prompt]);
         setPrompt("");
         return;
       }
@@ -85043,15 +85074,14 @@ function AuthError({ authError }) {
 
 // packages/cli/src/hooks/useGeminiStream.ts
 var import_react26 = __toESM(require_react(), 1);
-function useGeminiStream(geminiClient, setMessages) {
+function useGeminiStream(geminiClient, addItem) {
   const [isResponding, setIsResponding] = (0, import_react26.useState)(false);
   const submitQuery = (0, import_react26.useCallback)(async (query) => {
     setIsResponding(true);
     const controller = new AbortController();
     try {
       const stream = geminiClient.sendMessageStream(query, controller);
-      const response = await processGeminiStream(stream, controller);
-      console.log("RESPONSE", response);
+      await processGeminiStream(stream, controller);
     } catch (e) {
       console.log("ERR", e);
     } finally {
@@ -85060,14 +85090,14 @@ function useGeminiStream(geminiClient, setMessages) {
   }, [geminiClient, isResponding, setIsResponding]);
   async function processGeminiStream(stream, _controller) {
     for await (const event of stream) {
-      console.log("IS IT HERE", event);
-      setMessages((prev) => [...prev, JSON.stringify(event.candidates[0].content.parts[0].text)]);
+      addItem(event);
     }
     return true;
   }
   return {
     submitQuery,
     isResponding
+    // currentMessage
   };
 }
 
@@ -85075,42 +85105,80 @@ function useGeminiStream(geminiClient, setMessages) {
 var import_react27 = __toESM(require_react(), 1);
 function uesHistory() {
   const [messages, setMessages] = (0, import_react27.useState)([]);
+  function addItem(event) {
+    setMessages((prev) => [...prev, event]);
+  }
   return {
     messages,
+    addItem,
     setMessages
   };
 }
 
-// packages/cli/src/app.tsx
+// packages/cli/src/components/HistoryItem.tsx
 var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+function HistoryItem({ item }) {
+  return item.type === "user" ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Box_default, { borderColor: "blue", borderStyle: "round", flexDirection: "row", paddingX: 1, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Text, { children: [
+      "> ",
+      " "
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { children: item.content })
+  ] }) : /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Box_default, { marginLeft: 1, marginBottom: 1, gap: 1, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Text, { color: "green", children: [
+      " ",
+      "\u2726"
+    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { children: item.content })
+  ] });
+}
+
+// packages/cli/src/app.tsx
+var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
 function App2({ config: config2 }) {
   const { authError } = useAuth({ config: config2 });
-  const { messages, setMessages } = uesHistory();
-  const { submitQuery, isResponding } = useGeminiStream(config2.getGeminiClient(), setMessages);
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Header, {}),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Text, { children: [
-      "Hello, ",
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { color: "green", children: "Harish" })
-    ] }),
-    messages.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Box_default, { children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { children: item }) }, index)),
-    authError && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(AuthError, { authError }),
-    !authError && !isResponding && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+  const { messages, addItem } = uesHistory();
+  const {
+    submitQuery,
+    isResponding
+    // currentMessage
+  } = useGeminiStream(
+    config2.getGeminiClient(),
+    // setMessages,
+    addItem
+  );
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Static, { items: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Header, {}, "header"),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(Text, { children: [
+        "Hello, ",
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Text, { color: "green", children: "Harish" })
+      ] }, "greeting"),
+      ...messages.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        HistoryItem,
+        {
+          item
+        },
+        index
+      ))
+    ], children: (item) => item }, 0),
+    authError && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(AuthError, { authError }),
+    !authError && !isResponding && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
       InputPrompt,
       {
         onSubmit: submitQuery,
-        setMessages
+        addItem
       }
     )
   ] });
 }
 
 // packages/cli/src/cli.tsx
-var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
 function cli() {
   const config2 = main();
   render_default(
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
       App2,
       {
         config: config2

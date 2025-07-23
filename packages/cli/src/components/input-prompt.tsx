@@ -1,5 +1,6 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Text, useInput, Box } from "ink";
+import { Message } from "../hooks/useHistory.js";
 
 // interface AddItemProp {
 // 	addItem(mode: "user" | "assistant", input: string): void;
@@ -7,10 +8,10 @@ import { Text, useInput, Box } from "ink";
 
 interface InputPromptProps {
 	onSubmit: (query: string) => void;
-	setMessages: Dispatch<SetStateAction<string[]>>
+	addItem: (event: Message) => void;
 }
 
-export function InputPrompt({ onSubmit, setMessages }: InputPromptProps) {
+export function InputPrompt({ onSubmit, addItem }: InputPromptProps) {
 	const [prompt, setPrompt] = useState('');
 	const [_error, setError] = useState(false)
 	const [_errMessage, _setErrMessage] = useState('');
@@ -20,11 +21,10 @@ export function InputPrompt({ onSubmit, setMessages }: InputPromptProps) {
 
 	useInput((input, key) => {
 		if (key.return) {
-			console.log('ENTERED PROMPT', prompt)
 			// addItem('user', prompt);
 			if (prompt.trim()) {
+				addItem({ type: 'user', content: prompt })
 				onSubmit(prompt)
-				setMessages(prev => [...prev, prompt])
 				setPrompt('')
 				return;
 			}

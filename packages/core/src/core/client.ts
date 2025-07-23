@@ -17,20 +17,22 @@ export class GeminiClient {
 	}
 
 	async *sendMessageStream(request: string, _signal: AbortController) {
-		console.log("DID I GET REQUEST", request)
 		try {
 			const stream = await this.contentGenerator.generateContentStream({
 				model: this.model,
-				contents: [{ role: "user", parts: [{ text: 'who is the ceo of microsoft' + request }] }],
+				contents: [{ role: "user", parts: [{ text: request }] }],
 				config: {
 					thinkingConfig: {
 						thinkingBudget: 0,
 					}
 				}
 			})
-			console.log("WHAT IS IT HERE", stream)
 			for await (const event of stream) {
-				yield event
+				const content = getContent(event)
+				yield {
+					type: "gemini",
+					content,
+				}
 			}
 			return stream;
 		} catch (err) {
@@ -45,4 +47,16 @@ export class GeminiClient {
 		}
 		return this.contentGeneratorConfig;
 	}
+}
+
+function getContent(event: any) {
+	const parts = event.candidates?.[0]?.content?.parts;
+	if (!parts) {
+		return '';
+	}
+	const text = parts.map((part: any) => (part.text as string).trim().replace('"', ''))
+	if (text.length === 0) {
+		return '';
+	}
+	return text.join('');
 }

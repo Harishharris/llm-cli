@@ -1,11 +1,14 @@
 import { GeminiClient } from "@simple-cli/core/index.js";
-import { useState, SetStateAction, useCallback } from "react";
+import { useState, useCallback } from "react";
+import { Message } from "./useHistory.js";
 
 export default function useGeminiStream(
 	geminiClient: GeminiClient,
-	setMessages: React.Dispatch<SetStateAction<string[]>>
+	// setMessages: React.Dispatch<SetStateAction<Message[]>>,
+	addItem: (event: Message) => void
 ) {
 	const [isResponding, setIsResponding] = useState(false)
+	// const [currentMessage, setCurrentMessage] = useState<Message[]>([])
 
 	const submitQuery = useCallback(async (query: string) => {
 		setIsResponding(true)
@@ -13,8 +16,12 @@ export default function useGeminiStream(
 		const controller = new AbortController();
 		try {
 			const stream = geminiClient.sendMessageStream(query, controller)
-			const response = await processGeminiStream(stream, controller)
-			console.log("RESPONSE", response)
+			await processGeminiStream(stream, controller)
+			// console.log("about to set messages", currentMessage)
+			// if (currentMessage.length > 0) {
+			// 	setMessages((prev: Message[]) => [...prev, ...currentMessage])
+			// }
+			// setCurrentMessage([]);
 		} catch (e) {
 			console.log("ERR", e)
 		} finally {
@@ -23,18 +30,15 @@ export default function useGeminiStream(
 	}, [geminiClient, isResponding, setIsResponding])
 
 	async function processGeminiStream(stream: AsyncGenerator<any, unknown>, _controller: AbortController) {
-		// if (controller.signal.aborted) {
-		// 	return false;
-		// }
 		for await (const event of stream) {
-			console.log("IS IT HERE", event)
-			setMessages((prev: any) => [...prev, JSON.stringify(event.candidates[0].content.parts[0].text)])
+			addItem(event as Message);
 		}
 		return true;
 	}
 
 	return {
 		submitQuery,
-		isResponding
+		isResponding,
+		// currentMessage
 	}
 }
