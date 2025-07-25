@@ -1,7 +1,7 @@
 import Gradient from "ink-gradient"
 import BigText from 'ink-big-text'
 import { Box, Text } from 'ink'
-import { greaterThan } from './ascii-text.js'
+import { greaterThan } from './asciiText.js'
 
 export function Header() {
 	return (

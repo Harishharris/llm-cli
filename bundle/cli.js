@@ -1384,7 +1384,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect4(create2, deps) {
+        function useEffect5(create2, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create2, deps);
         }
@@ -1396,7 +1396,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useLayoutEffect(create2, deps);
         }
-        function useCallback2(callback, deps) {
+        function useCallback3(callback, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
@@ -2163,11 +2163,11 @@ var require_react_development = __commonJS({
         exports.memo = memo;
         exports.startTransition = startTransition;
         exports.unstable_act = act;
-        exports.useCallback = useCallback2;
+        exports.useCallback = useCallback3;
         exports.useContext = useContext7;
         exports.useDebugValue = useDebugValue;
         exports.useDeferredValue = useDeferredValue;
-        exports.useEffect = useEffect4;
+        exports.useEffect = useEffect5;
         exports.useId = useId;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useInsertionEffect = useInsertionEffect;
@@ -27676,7 +27676,7 @@ var require_backend = __commonJS({
                     return function() {
                     };
                   },
-                  useCallback: function useCallback2(a) {
+                  useCallback: function useCallback3(a) {
                     var b = C();
                     x.push({
                       primitive: "Callback",
@@ -27693,7 +27693,7 @@ var require_backend = __commonJS({
                     });
                     return a._currentValue;
                   },
-                  useEffect: function useEffect4(a) {
+                  useEffect: function useEffect5(a) {
                     C();
                     x.push({
                       primitive: "Effect",
@@ -84913,7 +84913,7 @@ function main() {
   });
 }
 
-// packages/cli/src/components/input-prompt.tsx
+// packages/cli/src/components/inputPrompt.tsx
 var import_react22 = __toESM(require_react(), 1);
 var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
 function InputPrompt({ onSubmit, addItem }) {
@@ -85017,7 +85017,7 @@ var BigText = ({ text, ...props }) => {
 };
 var dist_default5 = BigText;
 
-// packages/cli/src/ascii-text.ts
+// packages/cli/src/asciiText.ts
 var greaterThan = `
 \u2588\u2588\u2557\u2591\u2591
 \u255A\u2588\u2588\u2557\u2591
@@ -85076,12 +85076,22 @@ function AuthError({ authError }) {
 var import_react26 = __toESM(require_react(), 1);
 function useGeminiStream(geminiClient, addItem) {
   const [isResponding, setIsResponding] = (0, import_react26.useState)(false);
+  const [currentMessage, setCurrentMessage] = (0, import_react26.useState)();
+  const [isStreaming, setIsStreaming] = (0, import_react26.useState)(false);
+  (0, import_react26.useEffect)(() => {
+    if (!isStreaming && currentMessage) {
+      addItem(currentMessage);
+      setCurrentMessage(void 0);
+    }
+  }, [currentMessage, addItem, isStreaming]);
   const submitQuery = (0, import_react26.useCallback)(async (query) => {
     setIsResponding(true);
+    setIsStreaming(true);
     const controller = new AbortController();
     try {
       const stream = geminiClient.sendMessageStream(query, controller);
       await processGeminiStream(stream, controller);
+      setIsStreaming(false);
     } catch (e) {
       console.log("ERR", e);
     } finally {
@@ -85090,14 +85100,19 @@ function useGeminiStream(geminiClient, addItem) {
   }, [geminiClient, isResponding, setIsResponding]);
   async function processGeminiStream(stream, _controller) {
     for await (const event of stream) {
-      addItem(event);
+      setCurrentMessage((prev) => ({
+        ...prev,
+        ...event,
+        content: (prev?.content || "") + " " + event.content
+      }));
     }
     return true;
   }
   return {
+    isStreaming,
     submitQuery,
-    isResponding
-    // currentMessage
+    isResponding,
+    currentMessage
   };
 }
 
@@ -85105,9 +85120,9 @@ function useGeminiStream(geminiClient, addItem) {
 var import_react27 = __toESM(require_react(), 1);
 function uesHistory() {
   const [messages, setMessages] = (0, import_react27.useState)([]);
-  function addItem(event) {
-    setMessages((prev) => [...prev, event]);
-  }
+  const addItem = (0, import_react27.useCallback)((event) => {
+    setMessages((prev) => [...prev, { ...event }]);
+  }, [setMessages]);
   return {
     messages,
     addItem,
@@ -85118,6 +85133,9 @@ function uesHistory() {
 // packages/cli/src/components/HistoryItem.tsx
 var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
 function HistoryItem({ item }) {
+  if (!item || !item.content) {
+    return null;
+  }
   return item.type === "user" ? /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Box_default, { borderColor: "blue", borderStyle: "round", flexDirection: "row", paddingX: 1, children: [
     /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Text, { children: [
       "> ",
@@ -85140,11 +85158,10 @@ function App2({ config: config2 }) {
   const { messages, addItem } = uesHistory();
   const {
     submitQuery,
-    isResponding
-    // currentMessage
+    currentMessage,
+    isStreaming
   } = useGeminiStream(
     config2.getGeminiClient(),
-    // setMessages,
     addItem
   );
   return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
@@ -85162,8 +85179,9 @@ function App2({ config: config2 }) {
         index
       ))
     ], children: (item) => item }, 0),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(HistoryItem, { item: currentMessage }, Date.now()),
     authError && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(AuthError, { authError }),
-    !authError && !isResponding && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+    !authError && !isStreaming && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
       InputPrompt,
       {
         onSubmit: submitQuery,

@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export interface Message {
-	type: 'user' | 'gemini';
+	type: 'user' | 'gemini' | 'system';
 	content: string;
 }
 
-export function uesHistory() {
+export function useHistory() {
 	const [messages, setMessages] = useState<Message[]>([])
 
-	function addItem(event: Message) {
-		setMessages((prev: Message[]) => [...prev, event as Message])
-	}
+	const addItem = useCallback((event: Message) => {
+		setMessages((prev: Message[]) => [...prev, { ...event }])
+	}, [setMessages]);
 
 	return {
 		messages,

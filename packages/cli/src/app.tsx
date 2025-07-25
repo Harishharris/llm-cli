@@ -1,11 +1,11 @@
 import { Text, Static } from 'ink';
-import { InputPrompt } from './components/input-prompt.js';
+import { InputPrompt } from './components/inputPrompt.js';
 import { Header } from './header.js';
 import { Config } from '@simple-cli/core'
 import { useAuth } from './hooks/useAuth.js';
 import { AuthError } from './components/AuthError.js';
 import useGeminiStream from './hooks/useGeminiStream.js';
-import { uesHistory } from './hooks/useHistory.js';
+import { useHistory } from './hooks/useHistory.js';
 import { HistoryItem } from './components/HistoryItem.js';
 
 type Props = {
@@ -13,18 +13,18 @@ type Props = {
 };
 
 export default function App({ config }: Props) {
-
 	const { authError } = useAuth({ config })
-	const { messages, addItem } = uesHistory()
-	const { submitQuery,
-		isResponding,
-		// currentMessage
+	const { messages, addItem } = useHistory()
+	const {
+		submitQuery,
+		currentMessage,
+		isStreaming
 	} = useGeminiStream(
 		config.getGeminiClient()!,
-		// setMessages,
 		addItem
 	)
-	// console.log("MESSAGES", messages)
+
+	// console.log("MESSAGES", currentMessage)
 
 	return (
 		<>
@@ -42,14 +42,15 @@ export default function App({ config }: Props) {
 			]}>
 				{(item) => item}
 			</Static >
-			{/* {currentMessage.map((item, index) => (
+			{/* {currentMessage?.map((item, index) => (
 				<HistoryItem
 					item={item}
 					key={index}
 				/>
 			))} */}
+			<HistoryItem item={currentMessage} key={Date.now()} />
 			{authError && <AuthError authError={authError} />}
-			{!authError && !isResponding && <InputPrompt
+			{!authError && !isStreaming && <InputPrompt
 				onSubmit={submitQuery}
 				addItem={addItem}
 			/>}
