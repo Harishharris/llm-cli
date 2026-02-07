@@ -1,17 +1,13 @@
 import Gradient from "ink-gradient"
-import BigText from 'ink-big-text'
 import { Box, Text } from 'ink'
-import { greaterThan } from './asciiText.js'
+import { LOGO } from './asciiText.js'
 
 export function Header() {
 	return (
 		<>
 			<Box flexDirection="row" alignItems='center'>
 				<Gradient name='morning'>
-					<Text>{greaterThan} </Text>
-				</Gradient>
-				<Gradient name='morning'>
-					<BigText text="Hello" font="block" />
+					<Text>{LOGO}</Text>
 				</Gradient>
 			</Box>
 

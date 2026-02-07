@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { Text, useInput, Box } from "ink";
-import { Message } from "../hooks/useHistory.js";
+import {useState} from 'react';
+import {Text, useInput, Box} from 'ink';
+import {Message} from '../hooks/useHistory.js';
+import {useTerminal} from '../hooks/useTerminla.js';
 
 // interface AddItemProp {
 // 	addItem(mode: "user" | "assistant", input: string): void;
@@ -11,29 +12,30 @@ interface InputPromptProps {
 	addItem: (event: Message) => void;
 }
 
-export function InputPrompt({ onSubmit, addItem }: InputPromptProps) {
+export function InputPrompt({onSubmit, addItem}: InputPromptProps) {
 	const [prompt, setPrompt] = useState('');
-	const [_error, setError] = useState(false)
+	const [_error, setError] = useState(false);
 	const [_errMessage, _setErrMessage] = useState('');
 	const [_submitted, setSubmitted] = useState(false);
+	const {columns: terminalWidth} = useTerminal();
 
-	const placeholder = " Ask your question";
+	const placeholder = ' Ask your question';
 
 	useInput((input, key) => {
 		if (key.return) {
 			// addItem('user', prompt);
 			if (prompt.trim()) {
-				addItem({ type: 'user', content: prompt })
-				onSubmit(prompt)
-				setPrompt('')
+				addItem({type: 'user', content: prompt});
+				onSubmit(prompt);
+				setPrompt('');
 				return;
 			}
-			setPrompt('')
+			setPrompt('');
 			setSubmitted(true);
 			setError(false);
 			return;
 		}
-		if (key.meta && key.backspace || key.delete) {
+		if ((key.meta && key.backspace) || key.delete) {
 			setPrompt(prompt.split(' ').slice(0, -1).join(' '));
 			return;
 		}
@@ -41,21 +43,31 @@ export function InputPrompt({ onSubmit, addItem }: InputPromptProps) {
 			setPrompt(prev => prev.slice(0, -1));
 			return;
 		}
+		if (prompt.trim().length === 0 && input === '/') {
+		}
 		setPrompt(prev => prev + input);
 		setSubmitted(false);
-	})
+	});
 
 	return (
-		<Box borderStyle="round" flexGrow={1} flexDirection="column" paddingLeft={1}>
-			<Box flexDirection="row">
-				<Text>&gt;</Text>
-				<Box paddingLeft={1}>
-					{/* <Text backgroundColor="white">{" "}</Text> */}
-					{prompt
-						? <Text>{prompt}</Text>
-						: <Text color="gray">{placeholder}</Text>}
+		<>
+			<Box
+				borderStyle="round"
+				flexGrow={1}
+				flexDirection="column"
+				paddingLeft={1}
+			>
+				<Box flexDirection="row">
+					<Text>&gt;</Text>
+					<Box paddingLeft={1} width={terminalWidth}>
+						{prompt ? (
+							<Text>{prompt}</Text>
+						) : (
+							<Text color="gray">{placeholder}</Text>
+						)}
+					</Box>
 				</Box>
 			</Box>
-		</Box>
+		</>
 	);
 }

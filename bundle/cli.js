@@ -1372,7 +1372,7 @@ var require_react_development = __commonJS({
           }
           return dispatcher.useContext(Context);
         }
-        function useState6(initialState) {
+        function useState7(initialState) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useState(initialState);
         }
@@ -1384,7 +1384,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect5(create2, deps) {
+        function useEffect6(create2, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create2, deps);
         }
@@ -2167,7 +2167,7 @@ var require_react_development = __commonJS({
         exports.useContext = useContext7;
         exports.useDebugValue = useDebugValue;
         exports.useDeferredValue = useDeferredValue;
-        exports.useEffect = useEffect5;
+        exports.useEffect = useEffect6;
         exports.useId = useId;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useInsertionEffect = useInsertionEffect;
@@ -2175,7 +2175,7 @@ var require_react_development = __commonJS({
         exports.useMemo = useMemo3;
         exports.useReducer = useReducer;
         exports.useRef = useRef;
-        exports.useState = useState6;
+        exports.useState = useState7;
         exports.useSyncExternalStore = useSyncExternalStore;
         exports.useTransition = useTransition;
         exports.version = ReactVersion;
@@ -2971,11 +2971,11 @@ var require_signals = __commonJS({
 var require_signal_exit = __commonJS({
   "node_modules/signal-exit/index.js"(exports, module) {
     "use strict";
-    var process14 = global.process;
-    var processOk = function(process15) {
-      return process15 && typeof process15 === "object" && typeof process15.removeListener === "function" && typeof process15.emit === "function" && typeof process15.reallyExit === "function" && typeof process15.listeners === "function" && typeof process15.kill === "function" && typeof process15.pid === "number" && typeof process15.on === "function";
+    var process15 = global.process;
+    var processOk = function(process16) {
+      return process16 && typeof process16 === "object" && typeof process16.removeListener === "function" && typeof process16.emit === "function" && typeof process16.reallyExit === "function" && typeof process16.listeners === "function" && typeof process16.kill === "function" && typeof process16.pid === "number" && typeof process16.on === "function";
     };
-    if (!processOk(process14)) {
+    if (!processOk(process15)) {
       module.exports = function() {
         return function() {
         };
@@ -2983,15 +2983,15 @@ var require_signal_exit = __commonJS({
     } else {
       assert = __require("assert");
       signals = require_signals();
-      isWin = /^win/i.test(process14.platform);
+      isWin = /^win/i.test(process15.platform);
       EE = __require("events");
       if (typeof EE !== "function") {
         EE = EE.EventEmitter;
       }
-      if (process14.__signal_exit_emitter__) {
-        emitter = process14.__signal_exit_emitter__;
+      if (process15.__signal_exit_emitter__) {
+        emitter = process15.__signal_exit_emitter__;
       } else {
-        emitter = process14.__signal_exit_emitter__ = new EE();
+        emitter = process15.__signal_exit_emitter__ = new EE();
         emitter.count = 0;
         emitter.emitted = {};
       }
@@ -3028,12 +3028,12 @@ var require_signal_exit = __commonJS({
         loaded = false;
         signals.forEach(function(sig) {
           try {
-            process14.removeListener(sig, sigListeners[sig]);
+            process15.removeListener(sig, sigListeners[sig]);
           } catch (er) {
           }
         });
-        process14.emit = originalProcessEmit;
-        process14.reallyExit = originalProcessReallyExit;
+        process15.emit = originalProcessEmit;
+        process15.reallyExit = originalProcessReallyExit;
         emitter.count -= 1;
       };
       module.exports.unload = unload;
@@ -3050,7 +3050,7 @@ var require_signal_exit = __commonJS({
           if (!processOk(global.process)) {
             return;
           }
-          var listeners = process14.listeners(sig);
+          var listeners = process15.listeners(sig);
           if (listeners.length === emitter.count) {
             unload();
             emit("exit", null, sig);
@@ -3058,7 +3058,7 @@ var require_signal_exit = __commonJS({
             if (isWin && sig === "SIGHUP") {
               sig = "SIGINT";
             }
-            process14.kill(process14.pid, sig);
+            process15.kill(process15.pid, sig);
           }
         };
       });
@@ -3074,36 +3074,36 @@ var require_signal_exit = __commonJS({
         emitter.count += 1;
         signals = signals.filter(function(sig) {
           try {
-            process14.on(sig, sigListeners[sig]);
+            process15.on(sig, sigListeners[sig]);
             return true;
           } catch (er) {
             return false;
           }
         });
-        process14.emit = processEmit;
-        process14.reallyExit = processReallyExit;
+        process15.emit = processEmit;
+        process15.reallyExit = processReallyExit;
       };
       module.exports.load = load;
-      originalProcessReallyExit = process14.reallyExit;
+      originalProcessReallyExit = process15.reallyExit;
       processReallyExit = function processReallyExit2(code) {
         if (!processOk(global.process)) {
           return;
         }
-        process14.exitCode = code || /* istanbul ignore next */
+        process15.exitCode = code || /* istanbul ignore next */
         0;
-        emit("exit", process14.exitCode, null);
-        emit("afterexit", process14.exitCode, null);
-        originalProcessReallyExit.call(process14, process14.exitCode);
+        emit("exit", process15.exitCode, null);
+        emit("afterexit", process15.exitCode, null);
+        originalProcessReallyExit.call(process15, process15.exitCode);
       };
-      originalProcessEmit = process14.emit;
+      originalProcessEmit = process15.emit;
       processEmit = function processEmit2(ev, arg) {
         if (ev === "exit" && processOk(global.process)) {
           if (arg !== void 0) {
-            process14.exitCode = arg;
+            process15.exitCode = arg;
           }
           var ret = originalProcessEmit.apply(this, arguments);
-          emit("exit", process14.exitCode, null);
-          emit("afterexit", process14.exitCode, null);
+          emit("exit", process15.exitCode, null);
+          emit("afterexit", process15.exitCode, null);
           return ret;
         } else {
           return originalProcessEmit.apply(this, arguments);
@@ -8600,9 +8600,9 @@ var require_react_reconciler_development = __commonJS({
       module.exports = function $$$reconciler($$$hostConfig) {
         var exports2 = {};
         "use strict";
-        var React12 = require_react();
+        var React11 = require_react();
         var Scheduler = require_scheduler();
-        var ReactSharedInternals = React12.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+        var ReactSharedInternals = React11.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
         var suppressWarning = false;
         function setSuppressWarning(newSuppressWarning) {
           {
@@ -8666,7 +8666,7 @@ var require_react_reconciler_development = __commonJS({
         var HostPortal = 4;
         var HostComponent = 5;
         var HostText = 6;
-        var Fragment4 = 7;
+        var Fragment5 = 7;
         var Mode2 = 8;
         var ContextConsumer = 9;
         var ContextProvider = 10;
@@ -8806,7 +8806,7 @@ var require_react_reconciler_development = __commonJS({
               return "DehydratedFragment";
             case ForwardRef:
               return getWrappedName$1(type, type.render, "ForwardRef");
-            case Fragment4:
+            case Fragment5:
               return "Fragment";
             case HostComponent:
               return type;
@@ -11940,7 +11940,7 @@ var require_react_reconciler_development = __commonJS({
             }
           }
           function updateFragment2(returnFiber, current2, fragment, lanes, key) {
-            if (current2 === null || current2.tag !== Fragment4) {
+            if (current2 === null || current2.tag !== Fragment5) {
               var created = createFiberFromFragment(fragment, returnFiber.mode, lanes, key);
               created.return = returnFiber;
               return created;
@@ -12343,7 +12343,7 @@ var require_react_reconciler_development = __commonJS({
               if (child.key === key) {
                 var elementType = element.type;
                 if (elementType === REACT_FRAGMENT_TYPE) {
-                  if (child.tag === Fragment4) {
+                  if (child.tag === Fragment5) {
                     deleteRemainingChildren(returnFiber, child.sibling);
                     var existing = useFiber(child, element.props.children);
                     existing.return = returnFiber;
@@ -17834,7 +17834,7 @@ var require_react_reconciler_development = __commonJS({
               var _resolvedProps2 = workInProgress2.elementType === type ? _unresolvedProps2 : resolveDefaultProps(type, _unresolvedProps2);
               return updateForwardRef(current2, workInProgress2, type, _resolvedProps2, renderLanes2);
             }
-            case Fragment4:
+            case Fragment5:
               return updateFragment(current2, workInProgress2, renderLanes2);
             case Mode2:
               return updateMode(current2, workInProgress2, renderLanes2);
@@ -18271,7 +18271,7 @@ var require_react_reconciler_development = __commonJS({
             case SimpleMemoComponent:
             case FunctionComponent:
             case ForwardRef:
-            case Fragment4:
+            case Fragment5:
             case Mode2:
             case Profiler:
             case ContextConsumer:
@@ -23039,7 +23039,7 @@ var require_react_reconciler_development = __commonJS({
           return fiber;
         }
         function createFiberFromFragment(elements, mode, lanes, key) {
-          var fiber = createFiber(Fragment4, elements, key, mode);
+          var fiber = createFiber(Fragment5, elements, key, mode);
           fiber.lanes = lanes;
           return fiber;
         }
@@ -27693,7 +27693,7 @@ var require_backend = __commonJS({
                     });
                     return a._currentValue;
                   },
-                  useEffect: function useEffect5(a) {
+                  useEffect: function useEffect6(a) {
                     C();
                     x.push({
                       primitive: "Effect",
@@ -27770,7 +27770,7 @@ var require_backend = __commonJS({
                     });
                     return a;
                   },
-                  useState: function useState6(a) {
+                  useState: function useState7(a) {
                     var b = C();
                     a = null !== b ? b.memoizedState : "function" === typeof a ? a() : a;
                     x.push({
@@ -28966,12 +28966,12 @@ var require_backend = __commonJS({
               /***/
               (module2, __unused_webpack_exports, __webpack_require__2) => {
                 "use strict";
-                var process14 = __webpack_require__2(169);
+                var process15 = __webpack_require__2(169);
                 module2.exports = LRUCache;
                 var Map2 = __webpack_require__2(307);
                 var util2 = __webpack_require__2(82);
                 var Yallist = __webpack_require__2(695);
-                var hasSymbol = typeof Symbol === "function" && process14.env._nodeLRUCacheForceNoSymbol !== "1";
+                var hasSymbol = typeof Symbol === "function" && process15.env._nodeLRUCacheForceNoSymbol !== "1";
                 var makeSymbol;
                 if (hasSymbol) {
                   makeSymbol = function makeSymbol2(key) {
@@ -29362,7 +29362,7 @@ var require_backend = __commonJS({
             169: (
               /***/
               (module2) => {
-                var process14 = module2.exports = {};
+                var process15 = module2.exports = {};
                 var cachedSetTimeout;
                 var cachedClearTimeout;
                 function defaultSetTimout() {
@@ -29467,7 +29467,7 @@ var require_backend = __commonJS({
                   draining = false;
                   runClearTimeout(timeout);
                 }
-                process14.nextTick = function(fun) {
+                process15.nextTick = function(fun) {
                   var args = new Array(arguments.length - 1);
                   if (arguments.length > 1) {
                     for (var i = 1; i < arguments.length; i++) {
@@ -29486,36 +29486,36 @@ var require_backend = __commonJS({
                 Item.prototype.run = function() {
                   this.fun.apply(null, this.array);
                 };
-                process14.title = "browser";
-                process14.browser = true;
-                process14.env = {};
-                process14.argv = [];
-                process14.version = "";
-                process14.versions = {};
+                process15.title = "browser";
+                process15.browser = true;
+                process15.env = {};
+                process15.argv = [];
+                process15.version = "";
+                process15.versions = {};
                 function noop2() {
                 }
-                process14.on = noop2;
-                process14.addListener = noop2;
-                process14.once = noop2;
-                process14.off = noop2;
-                process14.removeListener = noop2;
-                process14.removeAllListeners = noop2;
-                process14.emit = noop2;
-                process14.prependListener = noop2;
-                process14.prependOnceListener = noop2;
-                process14.listeners = function(name) {
+                process15.on = noop2;
+                process15.addListener = noop2;
+                process15.once = noop2;
+                process15.off = noop2;
+                process15.removeListener = noop2;
+                process15.removeAllListeners = noop2;
+                process15.emit = noop2;
+                process15.prependListener = noop2;
+                process15.prependOnceListener = noop2;
+                process15.listeners = function(name) {
                   return [];
                 };
-                process14.binding = function(name) {
+                process15.binding = function(name) {
                   throw new Error("process.binding is not supported");
                 };
-                process14.cwd = function() {
+                process15.cwd = function() {
                   return "/";
                 };
-                process14.chdir = function(dir) {
+                process15.chdir = function(dir) {
                   throw new Error("process.chdir is not supported");
                 };
-                process14.umask = function() {
+                process15.umask = function() {
                   return 0;
                 };
               }
@@ -29524,9 +29524,9 @@ var require_backend = __commonJS({
             307: (
               /***/
               (module2, __unused_webpack_exports, __webpack_require__2) => {
-                var process14 = __webpack_require__2(169);
-                if (process14.env.npm_package_name === "pseudomap" && process14.env.npm_lifecycle_script === "test") process14.env.TEST_PSEUDOMAP = "true";
-                if (typeof Map === "function" && !process14.env.TEST_PSEUDOMAP) {
+                var process15 = __webpack_require__2(169);
+                if (process15.env.npm_package_name === "pseudomap" && process15.env.npm_lifecycle_script === "test") process15.env.TEST_PSEUDOMAP = "true";
+                if (typeof Map === "function" && !process15.env.TEST_PSEUDOMAP) {
                   module2.exports = Map;
                 } else {
                   module2.exports = __webpack_require__2(761);
@@ -29817,7 +29817,7 @@ var require_backend = __commonJS({
             82: (
               /***/
               (__unused_webpack_module, exports2, __webpack_require__2) => {
-                var process14 = __webpack_require__2(169);
+                var process15 = __webpack_require__2(169);
                 function _typeof(obj) {
                   "@babel/helpers - typeof";
                   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -29876,15 +29876,15 @@ var require_backend = __commonJS({
                       return exports2.deprecate(fn, msg).apply(this, arguments);
                     };
                   }
-                  if (process14.noDeprecation === true) {
+                  if (process15.noDeprecation === true) {
                     return fn;
                   }
                   var warned = false;
                   function deprecated() {
                     if (!warned) {
-                      if (process14.throwDeprecation) {
+                      if (process15.throwDeprecation) {
                         throw new Error(msg);
-                      } else if (process14.traceDeprecation) {
+                      } else if (process15.traceDeprecation) {
                         console.trace(msg);
                       } else {
                         console.error(msg);
@@ -29898,11 +29898,11 @@ var require_backend = __commonJS({
                 var debugs = {};
                 var debugEnviron;
                 exports2.debuglog = function(set) {
-                  if (isUndefined(debugEnviron)) debugEnviron = process14.env.NODE_DEBUG || "";
+                  if (isUndefined(debugEnviron)) debugEnviron = process15.env.NODE_DEBUG || "";
                   set = set.toUpperCase();
                   if (!debugs[set]) {
                     if (new RegExp("\\b" + set + "\\b", "i").test(debugEnviron)) {
-                      var pid = process14.pid;
+                      var pid = process15.pid;
                       debugs[set] = function() {
                         var msg = exports2.format.apply(exports2, arguments);
                         console.error("%s %d: %s", set, pid, msg);
@@ -31756,7 +31756,7 @@ var require_backend = __commonJS({
             var isArray = Array.isArray;
             const src_isArray = isArray;
             ;
-            var process14 = __webpack_require__(169);
+            var process15 = __webpack_require__(169);
             function utils_typeof(obj) {
               "@babel/helpers - typeof";
               if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -32031,7 +32031,7 @@ var require_backend = __commonJS({
               return (_parseBool4 = parseBool(raw)) !== null && _parseBool4 !== void 0 ? _parseBool4 : true;
             }
             function getDefaultOpenInEditorURL() {
-              return typeof process14.env.EDITOR_URL === "string" ? process14.env.EDITOR_URL : "";
+              return typeof process15.env.EDITOR_URL === "string" ? process15.env.EDITOR_URL : "";
             }
             function getOpenInEditorURL() {
               try {
@@ -34930,7 +34930,7 @@ var require_backend = __commonJS({
                   symbolOrNumber.toString()
                 ) : symbolOrNumber;
               }
-              var _ReactTypeOfWork = ReactTypeOfWork, CacheComponent = _ReactTypeOfWork.CacheComponent, ClassComponent = _ReactTypeOfWork.ClassComponent, IncompleteClassComponent = _ReactTypeOfWork.IncompleteClassComponent, FunctionComponent = _ReactTypeOfWork.FunctionComponent, IndeterminateComponent = _ReactTypeOfWork.IndeterminateComponent, ForwardRef = _ReactTypeOfWork.ForwardRef, HostRoot = _ReactTypeOfWork.HostRoot, HostHoistable = _ReactTypeOfWork.HostHoistable, HostSingleton = _ReactTypeOfWork.HostSingleton, HostComponent = _ReactTypeOfWork.HostComponent, HostPortal = _ReactTypeOfWork.HostPortal, HostText = _ReactTypeOfWork.HostText, Fragment4 = _ReactTypeOfWork.Fragment, LazyComponent = _ReactTypeOfWork.LazyComponent, LegacyHiddenComponent = _ReactTypeOfWork.LegacyHiddenComponent, MemoComponent = _ReactTypeOfWork.MemoComponent, OffscreenComponent = _ReactTypeOfWork.OffscreenComponent, Profiler = _ReactTypeOfWork.Profiler, ScopeComponent = _ReactTypeOfWork.ScopeComponent, SimpleMemoComponent = _ReactTypeOfWork.SimpleMemoComponent, SuspenseComponent = _ReactTypeOfWork.SuspenseComponent, SuspenseListComponent = _ReactTypeOfWork.SuspenseListComponent, TracingMarkerComponent = _ReactTypeOfWork.TracingMarkerComponent;
+              var _ReactTypeOfWork = ReactTypeOfWork, CacheComponent = _ReactTypeOfWork.CacheComponent, ClassComponent = _ReactTypeOfWork.ClassComponent, IncompleteClassComponent = _ReactTypeOfWork.IncompleteClassComponent, FunctionComponent = _ReactTypeOfWork.FunctionComponent, IndeterminateComponent = _ReactTypeOfWork.IndeterminateComponent, ForwardRef = _ReactTypeOfWork.ForwardRef, HostRoot = _ReactTypeOfWork.HostRoot, HostHoistable = _ReactTypeOfWork.HostHoistable, HostSingleton = _ReactTypeOfWork.HostSingleton, HostComponent = _ReactTypeOfWork.HostComponent, HostPortal = _ReactTypeOfWork.HostPortal, HostText = _ReactTypeOfWork.HostText, Fragment5 = _ReactTypeOfWork.Fragment, LazyComponent = _ReactTypeOfWork.LazyComponent, LegacyHiddenComponent = _ReactTypeOfWork.LegacyHiddenComponent, MemoComponent = _ReactTypeOfWork.MemoComponent, OffscreenComponent = _ReactTypeOfWork.OffscreenComponent, Profiler = _ReactTypeOfWork.Profiler, ScopeComponent = _ReactTypeOfWork.ScopeComponent, SimpleMemoComponent = _ReactTypeOfWork.SimpleMemoComponent, SuspenseComponent = _ReactTypeOfWork.SuspenseComponent, SuspenseListComponent = _ReactTypeOfWork.SuspenseListComponent, TracingMarkerComponent = _ReactTypeOfWork.TracingMarkerComponent;
               function resolveFiberType(type) {
                 var typeSymbol = getTypeSymbol(type);
                 switch (typeSymbol) {
@@ -34975,7 +34975,7 @@ var require_backend = __commonJS({
                   case HostPortal:
                   case HostText:
                     return null;
-                  case Fragment4:
+                  case Fragment5:
                     return "Fragment";
                   case LazyComponent:
                     return "Lazy";
@@ -35039,7 +35039,7 @@ var require_backend = __commonJS({
             function attach(hook2, rendererID, renderer2, global2) {
               var version2 = renderer2.reconcilerVersion || renderer2.version;
               var _getInternalReactCons = getInternalReactConstants(version2), getDisplayNameForFiber = _getInternalReactCons.getDisplayNameForFiber, getTypeSymbol = _getInternalReactCons.getTypeSymbol, ReactPriorityLevels = _getInternalReactCons.ReactPriorityLevels, ReactTypeOfWork = _getInternalReactCons.ReactTypeOfWork, StrictModeBits = _getInternalReactCons.StrictModeBits;
-              var CacheComponent = ReactTypeOfWork.CacheComponent, ClassComponent = ReactTypeOfWork.ClassComponent, ContextConsumer = ReactTypeOfWork.ContextConsumer, DehydratedSuspenseComponent = ReactTypeOfWork.DehydratedSuspenseComponent, ForwardRef = ReactTypeOfWork.ForwardRef, Fragment4 = ReactTypeOfWork.Fragment, FunctionComponent = ReactTypeOfWork.FunctionComponent, HostRoot = ReactTypeOfWork.HostRoot, HostHoistable = ReactTypeOfWork.HostHoistable, HostSingleton = ReactTypeOfWork.HostSingleton, HostPortal = ReactTypeOfWork.HostPortal, HostComponent = ReactTypeOfWork.HostComponent, HostText = ReactTypeOfWork.HostText, IncompleteClassComponent = ReactTypeOfWork.IncompleteClassComponent, IndeterminateComponent = ReactTypeOfWork.IndeterminateComponent, LegacyHiddenComponent = ReactTypeOfWork.LegacyHiddenComponent, MemoComponent = ReactTypeOfWork.MemoComponent, OffscreenComponent = ReactTypeOfWork.OffscreenComponent, SimpleMemoComponent = ReactTypeOfWork.SimpleMemoComponent, SuspenseComponent = ReactTypeOfWork.SuspenseComponent, SuspenseListComponent = ReactTypeOfWork.SuspenseListComponent, TracingMarkerComponent = ReactTypeOfWork.TracingMarkerComponent;
+              var CacheComponent = ReactTypeOfWork.CacheComponent, ClassComponent = ReactTypeOfWork.ClassComponent, ContextConsumer = ReactTypeOfWork.ContextConsumer, DehydratedSuspenseComponent = ReactTypeOfWork.DehydratedSuspenseComponent, ForwardRef = ReactTypeOfWork.ForwardRef, Fragment5 = ReactTypeOfWork.Fragment, FunctionComponent = ReactTypeOfWork.FunctionComponent, HostRoot = ReactTypeOfWork.HostRoot, HostHoistable = ReactTypeOfWork.HostHoistable, HostSingleton = ReactTypeOfWork.HostSingleton, HostPortal = ReactTypeOfWork.HostPortal, HostComponent = ReactTypeOfWork.HostComponent, HostText = ReactTypeOfWork.HostText, IncompleteClassComponent = ReactTypeOfWork.IncompleteClassComponent, IndeterminateComponent = ReactTypeOfWork.IndeterminateComponent, LegacyHiddenComponent = ReactTypeOfWork.LegacyHiddenComponent, MemoComponent = ReactTypeOfWork.MemoComponent, OffscreenComponent = ReactTypeOfWork.OffscreenComponent, SimpleMemoComponent = ReactTypeOfWork.SimpleMemoComponent, SuspenseComponent = ReactTypeOfWork.SuspenseComponent, SuspenseListComponent = ReactTypeOfWork.SuspenseListComponent, TracingMarkerComponent = ReactTypeOfWork.TracingMarkerComponent;
               var ImmediatePriority = ReactPriorityLevels.ImmediatePriority, UserBlockingPriority = ReactPriorityLevels.UserBlockingPriority, NormalPriority = ReactPriorityLevels.NormalPriority, LowPriority = ReactPriorityLevels.LowPriority, IdlePriority = ReactPriorityLevels.IdlePriority, NoPriority = ReactPriorityLevels.NoPriority;
               var getLaneLabelMap = renderer2.getLaneLabelMap, injectProfilingHooks = renderer2.injectProfilingHooks, overrideHookState = renderer2.overrideHookState, overrideHookStateDeletePath = renderer2.overrideHookStateDeletePath, overrideHookStateRenamePath = renderer2.overrideHookStateRenamePath, overrideProps = renderer2.overrideProps, overridePropsDeletePath = renderer2.overridePropsDeletePath, overridePropsRenamePath = renderer2.overridePropsRenamePath, scheduleRefresh = renderer2.scheduleRefresh, setErrorHandler = renderer2.setErrorHandler, setSuspenseHandler = renderer2.setSuspenseHandler, scheduleUpdate = renderer2.scheduleUpdate;
               var supportsTogglingError = typeof setErrorHandler === "function" && typeof scheduleUpdate === "function";
@@ -35246,7 +35246,7 @@ var require_backend = __commonJS({
                     return true;
                   case HostRoot:
                     return false;
-                  case Fragment4:
+                  case Fragment5:
                     return key === null;
                   default:
                     var typeSymbol = getTypeSymbol(type);
@@ -35320,7 +35320,7 @@ var require_backend = __commonJS({
                     return ElementTypeHostComponent;
                   case HostPortal:
                   case HostText:
-                  case Fragment4:
+                  case Fragment5:
                     return ElementTypeOtherOrUnknown;
                   case MemoComponent:
                   case SimpleMemoComponent:
@@ -48855,7 +48855,7 @@ var require_logging_utils = __commonJS({
     exports.setBackend = setBackend;
     exports.log = log;
     var node_events_1 = __require("node:events");
-    var process14 = __importStar(__require("node:process"));
+    var process15 = __importStar(__require("node:process"));
     var util2 = __importStar(__require("node:util"));
     var colours_1 = require_colours();
     var LogSeverity;
@@ -48906,7 +48906,7 @@ var require_logging_utils = __commonJS({
         this.cached = /* @__PURE__ */ new Map();
         this.filters = [];
         this.filtersSet = false;
-        let nodeFlag = (_a = process14.env[exports.env.nodeEnables]) !== null && _a !== void 0 ? _a : "*";
+        let nodeFlag = (_a = process15.env[exports.env.nodeEnables]) !== null && _a !== void 0 ? _a : "*";
         if (nodeFlag === "all") {
           nodeFlag = "*";
         }
@@ -48946,7 +48946,7 @@ var require_logging_utils = __commonJS({
         return (fields, ...args) => {
           var _a;
           const nscolour = `${colours_1.Colours.green}${namespace}${colours_1.Colours.reset}`;
-          const pid = `${colours_1.Colours.yellow}${process14.pid}${colours_1.Colours.reset}`;
+          const pid = `${colours_1.Colours.yellow}${process15.pid}${colours_1.Colours.reset}`;
           let level;
           switch (fields.severity) {
             case LogSeverity.ERROR:
@@ -48994,8 +48994,8 @@ var require_logging_utils = __commonJS({
       }
       setFilters() {
         var _a;
-        const existingFilters = (_a = process14.env["NODE_DEBUG"]) !== null && _a !== void 0 ? _a : "";
-        process14.env["NODE_DEBUG"] = `${existingFilters}${existingFilters ? "," : ""}${this.filters.join(",")}`;
+        const existingFilters = (_a = process15.env["NODE_DEBUG"]) !== null && _a !== void 0 ? _a : "";
+        process15.env["NODE_DEBUG"] = `${existingFilters}${existingFilters ? "," : ""}${this.filters.join(",")}`;
       }
     };
     function getDebugBackend(debugPkg) {
@@ -49041,7 +49041,7 @@ var require_logging_utils = __commonJS({
       loggerCache.clear();
     }
     function log(namespace, parent) {
-      const enablesFlag = process14.env[exports.env.nodeEnables];
+      const enablesFlag = process15.env[exports.env.nodeEnables];
       if (!enablesFlag) {
         return exports.placeholder;
       }
@@ -51509,7 +51509,12 @@ var require_sign_stream = __commonJS({
       return util2.format("%s.%s", securedInput, signature);
     }
     function SignStream(opts) {
-      var secret = opts.secret || opts.privateKey || opts.key;
+      var secret = opts.secret;
+      secret = secret == null ? opts.privateKey : secret;
+      secret = secret == null ? opts.key : secret;
+      if (/^hs/i.test(opts.header.alg) === true && secret == null) {
+        throw new TypeError("secret must be a string or buffer or a KeyObject");
+      }
       var secretStream = new DataStream(secret);
       this.readable = true;
       this.header = opts.header;
@@ -51622,7 +51627,12 @@ var require_verify_stream = __commonJS({
     }
     function VerifyStream(opts) {
       opts = opts || {};
-      var secretOrKey = opts.secret || opts.publicKey || opts.key;
+      var secretOrKey = opts.secret;
+      secretOrKey = secretOrKey == null ? opts.publicKey : secretOrKey;
+      secretOrKey = secretOrKey == null ? opts.key : secretOrKey;
+      if (/^hs/i.test(opts.algorithm) === true && secretOrKey == null) {
+        throw new TypeError("secret must be a string or buffer or a KeyObject");
+      }
       var secretStream = new DataStream(secretOrKey);
       this.readable = true;
       this.algorithm = opts.algorithm;
@@ -55612,7 +55622,7 @@ var require_react_jsx_runtime_development = __commonJS({
     if (process.env.NODE_ENV !== "production") {
       (function() {
         "use strict";
-        var React12 = require_react();
+        var React11 = require_react();
         var REACT_ELEMENT_TYPE = Symbol.for("react.element");
         var REACT_PORTAL_TYPE = Symbol.for("react.portal");
         var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
@@ -55638,7 +55648,7 @@ var require_react_jsx_runtime_development = __commonJS({
           }
           return null;
         }
-        var ReactSharedInternals = React12.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+        var ReactSharedInternals = React11.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
         function error(format) {
           {
             {
@@ -56692,7 +56702,7 @@ var require_react_is_development = __commonJS({
         var ContextProvider = REACT_PROVIDER_TYPE;
         var Element = REACT_ELEMENT_TYPE;
         var ForwardRef = REACT_FORWARD_REF_TYPE;
-        var Fragment4 = REACT_FRAGMENT_TYPE;
+        var Fragment5 = REACT_FRAGMENT_TYPE;
         var Lazy = REACT_LAZY_TYPE;
         var Memo = REACT_MEMO_TYPE;
         var Portal = REACT_PORTAL_TYPE;
@@ -56751,7 +56761,7 @@ var require_react_is_development = __commonJS({
         exports.ContextProvider = ContextProvider;
         exports.Element = Element;
         exports.ForwardRef = ForwardRef;
-        exports.Fragment = Fragment4;
+        exports.Fragment = Fragment5;
         exports.Lazy = Lazy;
         exports.Memo = Memo;
         exports.Portal = Portal;
@@ -60241,2618 +60251,6 @@ var require_gradient_string = __commonJS({
       module.exports[a] = (str) => new InitGradient(aliases[a].colors)(str, aliases[a].options);
       module.exports[a].multiline = (str) => new InitGradient(aliases[a].colors).multiline(str, aliases[a].options);
     }
-  }
-});
-
-// node_modules/cfonts/package.json
-var require_package4 = __commonJS({
-  "node_modules/cfonts/package.json"(exports, module) {
-    module.exports = {
-      name: "cfonts",
-      description: "Sexy ANSI fonts for the console",
-      version: "3.3.0",
-      homepage: "https://github.com/dominikwilkowski/cfonts",
-      author: {
-        name: "Dominik Wilkowski",
-        email: "Hi@Dominik-Wilkowski.com",
-        url: "http://dominik-wilkowski.com/"
-      },
-      contributors: {
-        name: "Dominik Wilkowski",
-        email: "Hi@Dominik-Wilkowski.com",
-        url: "http://dominik-wilkowski.com/"
-      },
-      repository: {
-        type: "git",
-        url: "git://github.com/dominikwilkowski/cfonts.git"
-      },
-      bugs: {
-        url: "https://github.com/dominikwilkowski/cfonts/issues"
-      },
-      engines: {
-        node: ">=10"
-      },
-      scripts: {
-        test: "yarn test:format && yarn build && yarn test:unit && yarn test:lint && yarn test:types && yarn test:fonts",
-        "test:fonts": "node ./test/fonttest.js",
-        "test:watch": "jest --watchAll --coverage",
-        "test:unit": "npx cross-env FORCE_COLOR=3 jest",
-        "test:types": "yarn types:clean && tsc -p tsconfig.json",
-        "test:lint": "eslint src/",
-        "test:format": 'prettier --version && prettier --list-different "**/*.{js,json}"',
-        format: 'prettier --write "**/*.{js,json}"',
-        build: "yarn build:lib && yarn build:bin && yarn build:fonts",
-        "build:bin": "npx mkdirp bin && mv lib/bin.js bin/index.js",
-        "build:lib": "npx mkdirp lib && babel src --out-dir lib",
-        "build:fonts": "make",
-        "types:clean": 'npx trash-cli "lib/*.d.ts"',
-        watch: "yarn build:lib && onchange 'src/**/*' -- yarn build:lib",
-        coveralls: "jest --coverage --coverageReporters=text-lcov | coveralls",
-        nuke: "rm -rf lib && rm -rf node_modules && rm yarn.lock"
-      },
-      devDependencies: {
-        "@babel/cli": "^7",
-        "@babel/core": "^7",
-        "@babel/preset-env": "^7",
-        "@types/node": "^20",
-        coveralls: "^3",
-        eslint: "^8",
-        "jest-cli": "^27",
-        onchange: "^7",
-        prettier: "^2",
-        typescript: "5.0"
-      },
-      peerDependencies: {},
-      dependencies: {
-        "supports-color": "^8",
-        "window-size": "^1"
-      },
-      jest: {
-        displayName: "CFonts",
-        testEnvironment: "node",
-        testRegex: "\\.spec.js$",
-        collectCoverageFrom: [
-          "src/*.js"
-        ],
-        setupFiles: [
-          "<rootDir>/test/env.js"
-        ],
-        coverageThreshold: {
-          global: {
-            branches: 95,
-            functions: 100,
-            lines: 95,
-            statements: 95
-          }
-        }
-      },
-      eslintConfig: {
-        env: {
-          node: true,
-          commonjs: true,
-          es6: true
-        },
-        extends: "eslint:recommended",
-        globals: {
-          Atomics: "readonly",
-          SharedArrayBuffer: "readonly"
-        },
-        parserOptions: {
-          ecmaVersion: 2018
-        },
-        rules: {
-          "no-async-promise-executor": "off",
-          "no-console": "off",
-          "no-unused-vars": [
-            "error",
-            {
-              argsIgnorePattern: "_"
-            }
-          ]
-        }
-      },
-      browserslist: [
-        "node >= 10"
-      ],
-      keywords: [
-        "font",
-        "banner",
-        "logo",
-        "CLI",
-        "console",
-        "ascii",
-        "pretty"
-      ],
-      files: [
-        "lib/*",
-        "bin/*",
-        "fonts/*"
-      ],
-      main: "lib/index.js",
-      types: "lib/index.d.ts",
-      bin: {
-        cfonts: "./bin/index.js"
-      },
-      licenses: [
-        {
-          type: "GPL-3.0-or-later",
-          url: "https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE"
-        }
-      ],
-      license: "GPL-3.0-or-later"
-    };
-  }
-});
-
-// node_modules/cfonts/lib/constants.js
-var require_constants3 = __commonJS({
-  "node_modules/cfonts/lib/constants.js"(exports, module) {
-    "use strict";
-    var CHARS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "|", "!", "?", ".", "+", "-", "_", "=", "@", "#", "$", "%", "&", "(", ")", "/", ":", ";", ",", " ", "'", '"'];
-    var COLORS = {
-      system: "system",
-      black: "black",
-      red: "red",
-      green: "green",
-      yellow: "yellow",
-      blue: "blue",
-      magenta: "magenta",
-      cyan: "cyan",
-      white: "white",
-      gray: "gray",
-      redbright: "redBright",
-      greenbright: "greenBright",
-      yellowbright: "yellowBright",
-      bluebright: "blueBright",
-      magentabright: "magentaBright",
-      cyanbright: "cyanBright",
-      whitebright: "whiteBright"
-    };
-    var BGCOLORS = {
-      transparent: "transparent",
-      black: "black",
-      red: "red",
-      green: "green",
-      yellow: "yellow",
-      blue: "blue",
-      magenta: "magenta",
-      cyan: "cyan",
-      white: "white",
-      blackbright: "blackBright",
-      redbright: "redBright",
-      greenbright: "greenBright",
-      yellowbright: "yellowBright",
-      bluebright: "blueBright",
-      magentabright: "magentaBright",
-      cyanbright: "cyanBright",
-      whitebright: "whiteBright"
-    };
-    var GRADIENTCOLORS = {
-      transparent: "transparent",
-      black: "black",
-      red: "red",
-      green: "green",
-      yellow: "yellow",
-      blue: "blue",
-      magenta: "magenta",
-      cyan: "cyan",
-      white: "white",
-      gray: "gray",
-      grey: "grey"
-    };
-    var GRADIENTS = {
-      lgbt: ["#750787", "#004dff", "#008026", "#ffed00", "#ff8c00", "#e40303"],
-      lgbtq: ["#750787", "#004dff", "#008026", "#ffed00", "#ff8c00", "#e40303"],
-      pride: ["#750787", "#004dff", "#008026", "#ffed00", "#ff8c00", "#e40303"],
-      agender: ["#000000", "#b9b9b9", "#ffffff", "#b8f483", "#ffffff", "#b9b9b9", "#000000"],
-      aromantic: ["#3da542", "#a7d379", "#ffffff", "#a9a9a9", "#000000"],
-      asexual: ["#000000", "#a3a3a3", "#ffffff", "#800080"],
-      bisexual: ["#d60270", "#d60270", "#9b4f96", "#0038a8", "#0038a8"],
-      genderfluid: ["#ff75a2", "#ffffff", "#be18d6", "#000000", "#333ebd"],
-      genderqueer: ["#b57edc", "#ffffff", "#4a8123"],
-      intersex: ["#ffd800", "#ffd800", "#7902aa", "#ffd800", "#ffd800"],
-      lesbian: ["#d52d00", "#ff9a56", "#ffffff", "#d362a4", "#a30262"],
-      nonbinary: ["#fcf434", "#ffffff", "#9c5cd4", "#2c2c2c"],
-      pansexual: ["#ff218c", "#ffd800", "#21b1ff"],
-      polysexual: ["#f61cb9", "#07d569", "#1c92f6"],
-      transgender: ["#5bcefa", "#f5a9b8", "#ffffff", "#f5a9b8", "#5bcefa"]
-    };
-    var ALIGNMENT = ["left", "center", "right", "top", "bottom"];
-    var FONTFACES = {
-      console: "console",
-      block: "block",
-      simpleblock: "simpleBlock",
-      simple: "simple",
-      "3d": "3d",
-      simple3d: "simple3d",
-      chrome: "chrome",
-      huge: "huge",
-      shade: "shade",
-      slick: "slick",
-      grid: "grid",
-      pallet: "pallet",
-      tiny: "tiny"
-    };
-    var CLIOPTIONS = {
-      "--version": {
-        description: "Use to display the version of cfonts",
-        example: "--version",
-        short: "-v",
-        fallback_shortcut: "-V",
-        default: false
-      },
-      "--help": {
-        description: "Use to display this help",
-        example: "--help",
-        short: "-h",
-        fallback_shortcut: false,
-        default: false
-      },
-      "--font": {
-        description: "Use to define the font face",
-        example: `--font block [green-open][ ${Object.keys(FONTFACES).map((font) => FONTFACES[font]).join(", ")} ][green-close]`,
-        short: "-f",
-        fallback_shortcut: false,
-        options: Object.keys(FONTFACES).map((color) => FONTFACES[color]),
-        default: "block"
-      },
-      "--colors": {
-        description: "Use to define the font color",
-        example: `--colors red [green-open][ ${Object.keys(COLORS).map((color) => COLORS[color]).join(", ")}, #ff8800, hex-colors etc... ][green-close]`,
-        short: "-c",
-        fallback_shortcut: false,
-        options: true,
-        default: "system"
-      },
-      "--background": {
-        description: "Use to define background color",
-        example: `--background blue [green-open][ ${Object.keys(BGCOLORS).map((bgcolor) => BGCOLORS[bgcolor]).join(", ")} ][green-close]`,
-        short: "-b",
-        fallback_shortcut: false,
-        options: Object.keys(BGCOLORS).map((color) => BGCOLORS[color]),
-        default: "transparent"
-      },
-      "--align": {
-        description: "Use to align your text output",
-        example: `--align [green-open][ ${ALIGNMENT.join(", ")} ][green-close]`,
-        short: "-a",
-        fallback_shortcut: false,
-        options: ALIGNMENT,
-        default: "left"
-      },
-      "--letter-spacing": {
-        description: "Use to define your letter spacing",
-        example: "--letter-spacing 2",
-        short: "-l",
-        fallback_shortcut: false,
-        options: true,
-        default: void 0
-      },
-      "--line-height": {
-        description: "Use to define your line height",
-        example: "--line-height 5",
-        short: "-z",
-        fallback_shortcut: false,
-        options: true,
-        default: void 0
-      },
-      "--spaceless": {
-        description: "Use to disable the padding around your output",
-        example: "--spaceless",
-        short: "-s",
-        fallback_shortcut: false,
-        default: false
-      },
-      "--max-length": {
-        description: "Use to define the amount of maximum characters per line",
-        example: "--max-length 10",
-        short: "-m",
-        fallback_shortcut: false,
-        options: true,
-        default: 0
-      },
-      "--gradient": {
-        description: "Use to define a start and end color of a gradient",
-        example: "--gradient red,blue,green",
-        short: "-g",
-        fallback_shortcut: false,
-        options: true,
-        default: false
-      },
-      "--independent-gradient": {
-        description: "Use to define that a gradient is applied independently for each line",
-        example: "--gradient red,blue --independent-gradient",
-        short: "-i",
-        fallback_shortcut: false,
-        default: false
-      },
-      "--transition-gradient": {
-        description: "Use to define that a gradient is a transition between the colors",
-        example: "--gradient red,blue,green --transition-gradient",
-        short: "-t",
-        fallback_shortcut: false,
-        default: false
-      },
-      "--raw-mode": {
-        description: "Use to enable proper newline rendering in raw mode in the terminal by adding \\r to line breaks",
-        example: "--raw-mode",
-        short: "-r",
-        fallback_shortcut: false,
-        default: false
-      },
-      "--env": {
-        description: "Use to define what environment you run CFonts in.",
-        example: `--env [green-open][ "node", "browser" ][green-close]`,
-        short: "-e",
-        fallback_shortcut: false,
-        options: true,
-        default: "node"
-      },
-      "--debug": {
-        description: "Use to enable debug mode",
-        example: "--debug",
-        short: "-d",
-        fallback_shortcut: false,
-        default: false
-      },
-      "--debug-level": {
-        description: "Use to define the debug level. The higher, the less debug infos",
-        example: "--debug-level 2",
-        short: "-x",
-        fallback_shortcut: false,
-        options: true,
-        default: 1
-      }
-    };
-    var PACKAGE = require_package4();
-    module.exports = exports = {
-      CHARS,
-      COLORS,
-      BGCOLORS,
-      GRADIENTCOLORS,
-      GRADIENTS,
-      ALIGNMENT,
-      FONTFACES,
-      CLIOPTIONS,
-      PACKAGE
-    };
-  }
-});
-
-// node_modules/cfonts/lib/DisplayVersion.js
-var require_DisplayVersion = __commonJS({
-  "node_modules/cfonts/lib/DisplayVersion.js"(exports, module) {
-    "use strict";
-    var {
-      PACKAGE
-    } = require_constants3();
-    var DisplayVersion = () => {
-      console.log(PACKAGE.version);
-    };
-    module.exports = exports = {
-      DisplayVersion
-    };
-  }
-});
-
-// node_modules/cfonts/node_modules/supports-color/index.js
-var require_supports_color2 = __commonJS({
-  "node_modules/cfonts/node_modules/supports-color/index.js"(exports, module) {
-    "use strict";
-    var os2 = __require("os");
-    var tty2 = __require("tty");
-    var hasFlag2 = require_has_flag();
-    var { env: env2 } = process;
-    var flagForceColor2;
-    if (hasFlag2("no-color") || hasFlag2("no-colors") || hasFlag2("color=false") || hasFlag2("color=never")) {
-      flagForceColor2 = 0;
-    } else if (hasFlag2("color") || hasFlag2("colors") || hasFlag2("color=true") || hasFlag2("color=always")) {
-      flagForceColor2 = 1;
-    }
-    function envForceColor2() {
-      if ("FORCE_COLOR" in env2) {
-        if (env2.FORCE_COLOR === "true") {
-          return 1;
-        }
-        if (env2.FORCE_COLOR === "false") {
-          return 0;
-        }
-        return env2.FORCE_COLOR.length === 0 ? 1 : Math.min(Number.parseInt(env2.FORCE_COLOR, 10), 3);
-      }
-    }
-    function translateLevel2(level) {
-      if (level === 0) {
-        return false;
-      }
-      return {
-        level,
-        hasBasic: true,
-        has256: level >= 2,
-        has16m: level >= 3
-      };
-    }
-    function supportsColor2(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
-      const noFlagForceColor = envForceColor2();
-      if (noFlagForceColor !== void 0) {
-        flagForceColor2 = noFlagForceColor;
-      }
-      const forceColor = sniffFlags ? flagForceColor2 : noFlagForceColor;
-      if (forceColor === 0) {
-        return 0;
-      }
-      if (sniffFlags) {
-        if (hasFlag2("color=16m") || hasFlag2("color=full") || hasFlag2("color=truecolor")) {
-          return 3;
-        }
-        if (hasFlag2("color=256")) {
-          return 2;
-        }
-      }
-      if (haveStream && !streamIsTTY && forceColor === void 0) {
-        return 0;
-      }
-      const min = forceColor || 0;
-      if (env2.TERM === "dumb") {
-        return min;
-      }
-      if (process.platform === "win32") {
-        const osRelease = os2.release().split(".");
-        if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
-          return Number(osRelease[2]) >= 14931 ? 3 : 2;
-        }
-        return 1;
-      }
-      if ("CI" in env2) {
-        if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE", "DRONE"].some((sign) => sign in env2) || env2.CI_NAME === "codeship") {
-          return 1;
-        }
-        return min;
-      }
-      if ("TEAMCITY_VERSION" in env2) {
-        return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env2.TEAMCITY_VERSION) ? 1 : 0;
-      }
-      if (env2.COLORTERM === "truecolor") {
-        return 3;
-      }
-      if ("TERM_PROGRAM" in env2) {
-        const version2 = Number.parseInt((env2.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
-        switch (env2.TERM_PROGRAM) {
-          case "iTerm.app":
-            return version2 >= 3 ? 3 : 2;
-          case "Apple_Terminal":
-            return 2;
-        }
-      }
-      if (/-256(color)?$/i.test(env2.TERM)) {
-        return 2;
-      }
-      if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env2.TERM)) {
-        return 1;
-      }
-      if ("COLORTERM" in env2) {
-        return 1;
-      }
-      return min;
-    }
-    function getSupportLevel(stream, options = {}) {
-      const level = supportsColor2(stream, {
-        streamIsTTY: stream && stream.isTTY,
-        ...options
-      });
-      return translateLevel2(level);
-    }
-    module.exports = {
-      supportsColor: getSupportLevel,
-      stdout: getSupportLevel({ isTTY: tty2.isatty(1) }),
-      stderr: getSupportLevel({ isTTY: tty2.isatty(2) })
-    };
-  }
-});
-
-// node_modules/cfonts/lib/Options.js
-var require_Options = __commonJS({
-  "node_modules/cfonts/lib/Options.js"(exports, module) {
-    "use strict";
-    var {
-      COLORS,
-      BGCOLORS,
-      FONTFACES
-    } = require_constants3();
-    var Options = {
-      store: {},
-      reset() {
-        const defaults = {
-          font: "block",
-          align: "left",
-          colors: [],
-          background: "transparent",
-          letterSpacing: 1,
-          lineHeight: 1,
-          spaceless: false,
-          maxLength: 0,
-          gradient: false,
-          independentGradient: false,
-          transitionGradient: false,
-          rawMode: false,
-          env: "node"
-        };
-        this.store = {
-          ...defaults
-        };
-      },
-      /**
-       * Get the current options
-       *
-       * @return {object} - Our options as hey are stored in our object
-       */
-      get get() {
-        return this.store;
-      },
-      /**
-       * Merge settings into our options object
-       *
-       * @param  {object}                  options                     - The settings object
-       * @param  {string}                  options.font                - Font face, Default 'block'
-       * @param  {string}                  options.align               - Text alignment, Default: 'left'
-       * @param  {array}                   options.colors              - Colors for font, Default: []
-       * @param  {string}                  options.background          - Color string for background, Default 'Black'
-       * @param  {string}                  options.backgroundColor     - Alias for background
-       * @param  {number}                  options.letterSpacing       - Space between letters, Default: set by selected font face
-       * @param  {number}                  options.lineHeight          - Space between lines, Default: 1
-       * @param  {boolean}                 options.spaceless           - Don't output space before and after output, Default: false
-       * @param  {number}                  options.maxLength           - Maximum amount of characters per line, Default width of console window
-       * @param  {(string|array|boolean)}  options.gradient            - Gradient color pair, Default: false
-       * @param  {boolean}                 options.independentGradient - A switch to calculate gradient per line or not
-       * @param  {boolean}                 options.transitionGradient  - A switch for transition gradients
-       * @param  {string}                  options.env                 - The environment we run cfonts in
-       * @param  {object}                  options.allowedColors       - All allowed font colors
-       * @param  {object}                  options.allowedBG           - All allowed background colors
-       * @param  {object}                  options.allowedFont         - All allowed fontfaces
-       * @param  {boolean}                 options.rawMode             - A switch for raw mode in terminals
-       */
-      set set({
-        font = "",
-        align,
-        colors,
-        background,
-        backgroundColor,
-        letterSpacing,
-        lineHeight,
-        spaceless,
-        maxLength,
-        gradient,
-        independentGradient,
-        transitionGradient,
-        env: env2,
-        allowedColors = COLORS,
-        allowedBG = BGCOLORS,
-        allowedFont = FONTFACES,
-        rawMode
-      }) {
-        this.store.font = font !== "" ? allowedFont[font.toLowerCase()] || font : this.store.font;
-        this.store.align = align !== void 0 ? align.toLowerCase() : this.store.align;
-        this.store.colors = Array.isArray(colors) ? colors.map((color) => allowedColors[color.toLowerCase()] || color) : this.store.colors;
-        const bg = backgroundColor || background;
-        this.store.background = bg !== void 0 ? allowedBG[bg.toLowerCase()] || bg : this.store.background;
-        this.store.letterSpacing = letterSpacing !== void 0 ? parseInt(letterSpacing.toString()) : font.toLowerCase() === "console" ? 0 : this.store.letterSpacing;
-        this.store.lineHeight = lineHeight !== void 0 ? parseInt(lineHeight.toString()) : font.toLowerCase() === "console" ? 0 : this.store.lineHeight;
-        this.store.spaceless = typeof spaceless === "boolean" ? spaceless : this.store.spaceless;
-        this.store.maxLength = maxLength !== void 0 ? maxLength : this.store.maxLength;
-        this.store.gradient = gradient !== void 0 && typeof gradient !== "boolean" ? Array.isArray(gradient) ? gradient : gradient.split(",") : gradient === false ? false : this.store.gradient;
-        this.store.independentGradient = independentGradient !== void 0 ? independentGradient : this.store.independentGradient;
-        this.store.transitionGradient = transitionGradient !== void 0 ? transitionGradient : this.store.transitionGradient;
-        this.store.env = env2 !== void 0 ? env2 : this.store.env;
-        this.store.rawMode = rawMode !== void 0 ? rawMode : this.store.rawMode;
-      }
-    };
-    module.exports = exports = {
-      Options
-    };
-  }
-});
-
-// node_modules/cfonts/lib/Color.js
-var require_Color = __commonJS({
-  "node_modules/cfonts/lib/Color.js"(exports, module) {
-    "use strict";
-    var {
-      supportsColor: supportsColor2
-    } = require_supports_color2();
-    var {
-      Options
-    } = require_Options();
-    var HEXTEST = RegExp("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
-    function Rgb2hsv({
-      r,
-      g,
-      b
-    }) {
-      r /= 255;
-      g /= 255;
-      b /= 255;
-      const max = Math.max(r, g, b);
-      const min = Math.min(r, g, b);
-      const diff2 = max - min;
-      let h = 0;
-      let v = max;
-      let s = max === 0 ? 0 : diff2 / max;
-      if (max === min) {
-        h = 0;
-      } else if (max === r && g >= b) {
-        h = 60 * ((g - b) / diff2);
-      } else if (max === r && g < b) {
-        h = 60 * ((g - b) / diff2) + 360;
-      } else if (max === g) {
-        h = 60 * ((b - r) / diff2) + 120;
-      } else {
-        h = 60 * ((r - g) / diff2) + 240;
-      }
-      return [h, s * 100, v * 100];
-    }
-    function Hsv2rgb(h, s, v) {
-      h /= 60;
-      s /= 100;
-      v /= 100;
-      const hi = Math.floor(h) % 6;
-      const f = h - Math.floor(h);
-      const p = 255 * v * (1 - s);
-      const q = 255 * v * (1 - s * f);
-      const t = 255 * v * (1 - s * (1 - f));
-      v *= 255;
-      switch (hi) {
-        case 0:
-          return {
-            r: v,
-            g: t,
-            b: p
-          };
-        case 1:
-          return {
-            r: q,
-            g: v,
-            b: p
-          };
-        case 2:
-          return {
-            r: p,
-            g: v,
-            b: t
-          };
-        case 3:
-          return {
-            r: p,
-            g: q,
-            b: v
-          };
-        case 4:
-          return {
-            r: t,
-            g: p,
-            b: v
-          };
-        case 5:
-          return {
-            r: v,
-            g: p,
-            b: q
-          };
-      }
-    }
-    function Rgb2hex(r, g, b) {
-      const val = (b | g << 8 | r << 16 | 1 << 24).toString(16).slice(1);
-      return "#" + val.toLowerCase();
-    }
-    function Hex2rgb(hex) {
-      hex = hex.replace(/^#/, "");
-      if (hex.length > 6) {
-        hex = hex.slice(0, 6);
-      }
-      if (hex.length === 4) {
-        hex = hex.slice(0, 3);
-      }
-      if (hex.length === 3) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-      }
-      const num = parseInt(hex, 16);
-      const r = num >> 16;
-      const g = num >> 8 & 255;
-      const b = num & 255;
-      const rgb = [r, g, b];
-      return rgb;
-    }
-    function Hsv2hsvRad([h, s, v]) {
-      return [h * Math.PI / 180, s, v];
-    }
-    function HsvRad2hsv(hRad, s, v) {
-      const precision = 1e12;
-      const h = Math.round(hRad * 180 / Math.PI * precision) / precision;
-      return [h, s, v];
-    }
-    function Hex2hsvRad(hex) {
-      const [r, g, b] = Hex2rgb(hex);
-      const hsv = Rgb2hsv({
-        r,
-        g,
-        b
-      });
-      const hsvRad = Hsv2hsvRad(hsv);
-      return hsvRad;
-    }
-    function HsvRad2hex(hRad, s, v) {
-      const [h] = HsvRad2hsv(hRad, s, v);
-      const {
-        r,
-        g,
-        b
-      } = Hsv2rgb(h, s, v);
-      const hex = Rgb2hex(r, g, b);
-      return hex;
-    }
-    function rgb2ansi_16m(r, g, b, bg = false) {
-      const layer_code = bg ? 48 : 38;
-      return `\x1B[${layer_code};2;${r};${g};${b}m`;
-    }
-    function rgb2ansi256Code(red, green, blue) {
-      if (red === green && green === blue) {
-        if (red < 8) {
-          return 16;
-        }
-        if (red > 248) {
-          return 231;
-        }
-        return Math.round((red - 8) / 247 * 24) + 232;
-      }
-      return 16 + 36 * Math.round(red / 255 * 5) + 6 * Math.round(green / 255 * 5) + Math.round(blue / 255 * 5);
-    }
-    function rgb2ansi_256(r, g, b, bg = false) {
-      const layer_code = bg ? 48 : 38;
-      const code = rgb2ansi256Code(r, g, b);
-      return `\x1B[${layer_code};5;${code}m`;
-    }
-    function ansi_2562ansi_16(code, bg = false) {
-      let ansi_16_code;
-      if (code <= 7) {
-        ansi_16_code = code + 10;
-      }
-      if (code >= 8 && code <= 15) {
-        ansi_16_code = code + 82;
-      }
-      if (code === 16) {
-        ansi_16_code = 0;
-      }
-      if (code >= 17 && code <= 19) {
-        ansi_16_code = 34;
-      }
-      if (code >= 20 && code <= 21 || code >= 25 && code <= 27) {
-        ansi_16_code = 94;
-      }
-      if (code >= 22 && code <= 24 || code >= 58 && code <= 60 || code >= 64 && code <= 66 || code >= 94 && code <= 95 || code >= 100 && code <= 102 || code >= 106 && code <= 108 || code >= 130 && code <= 131 || code >= 136 && code <= 138 || code >= 142 && code <= 144 || code >= 148 && code <= 151 || code >= 172 && code <= 174 || code >= 178 && code <= 181 || code >= 184 && code <= 189) {
-        ansi_16_code = 33;
-      }
-      if (code >= 28 && code <= 30 || code >= 34 && code <= 36 || code >= 70 && code <= 72 || code >= 76 && code <= 79 || code >= 112 && code <= 114) {
-        ansi_16_code = 32;
-      }
-      if (code >= 31 && code <= 33 || code >= 37 && code <= 39 || code >= 44 && code <= 45 || code >= 61 && code <= 63 || code >= 67 && code <= 69 || code >= 73 && code <= 75 || code >= 80 && code <= 81 || code >= 103 && code <= 111 || code >= 115 && code <= 117 || code >= 152 && code <= 153) {
-        ansi_16_code = 36;
-      }
-      if (code >= 40 && code <= 43 || code >= 46 && code <= 49 || code >= 82 && code <= 85 || code >= 118 && code <= 120 || code >= 154 && code <= 157) {
-        ansi_16_code = 92;
-      }
-      if (code >= 50 && code <= 51 || code >= 86 && code <= 87 || code >= 121 && code <= 123 || code >= 158 && code <= 159) {
-        ansi_16_code = 96;
-      }
-      if (code >= 52 && code <= 54 || code >= 88 && code <= 90 || code >= 124 && code <= 126 || code >= 166 && code <= 168) {
-        ansi_16_code = 31;
-      }
-      if (code >= 55 && code <= 57 || code >= 91 && code <= 93 || code >= 96 && code <= 99 || code >= 127 && code <= 129 || code >= 132 && code <= 135 || code >= 139 && code <= 141 || code >= 145 && code <= 147 || code >= 169 && code <= 171 || code >= 175 && code <= 177) {
-        ansi_16_code = 35;
-      }
-      if (code >= 160 && code <= 163 || code >= 196 && code <= 199 || code >= 202 && code <= 213) {
-        ansi_16_code = 91;
-      }
-      if (code >= 164 && code <= 165 || code >= 182 && code <= 183 || code >= 200 && code <= 201 || code >= 218 && code <= 219) {
-        ansi_16_code = 95;
-      }
-      if (code >= 190 && code <= 193 || code >= 214 && code <= 217 || code >= 220 && code <= 228) {
-        ansi_16_code = 93;
-      }
-      if (code >= 194 && code <= 195 || code >= 229 && code <= 231 || code >= 253 && code <= 255) {
-        ansi_16_code = 97;
-      }
-      if (code >= 232 && code <= 239) {
-        ansi_16_code = 30;
-      }
-      if (code >= 240 && code <= 246) {
-        ansi_16_code = 90;
-      }
-      if (code >= 247 && code <= 252) {
-        ansi_16_code = 37;
-      }
-      if (bg) {
-        ansi_16_code = ansi_16_code + 10;
-      }
-      return `\x1B[${ansi_16_code}m`;
-    }
-    function get_term_color_support() {
-      let term_support = supportsColor2().level || 3;
-      if ("NO_COLOR" in process.env) {
-        term_support = 0;
-      }
-      if (process.env["FORCE_COLOR"] === "0") {
-        term_support = 0;
-      }
-      if (process.env["FORCE_COLOR"] === "1") {
-        term_support = 1;
-      }
-      if (process.env["FORCE_COLOR"] === "2") {
-        term_support = 2;
-      }
-      if (process.env["FORCE_COLOR"] === "3") {
-        term_support = 3;
-      }
-      return term_support;
-    }
-    var Color = (color, bg = false) => {
-      const COLORS = {
-        black: "#000",
-        red: "#ea3223",
-        green: "#377d22",
-        yellow: "#fffd54",
-        blue: "#0020f5",
-        magenta: "#ea3df7",
-        cyan: "#74fbfd",
-        white: "#fff",
-        gray: "#808080",
-        redbright: "#ee776d",
-        greenbright: "#8cf57b",
-        yellowbright: "#fffb7f",
-        bluebright: "#6974f6",
-        magentabright: "#ee82f8",
-        cyanbright: "#8dfafd",
-        whitebright: "#fff"
-      };
-      const support = get_term_color_support();
-      if (color === "system" || support === 0) {
-        return {
-          open: "",
-          close: ""
-        };
-      }
-      const OPTIONS = Options.get;
-      if (OPTIONS.env === "node") {
-        let open2;
-        let close = bg ? "\x1B[49m" : "\x1B[39m";
-        switch (color.toLowerCase()) {
-          case "transparent":
-            open2 = "\x1B[49m";
-            break;
-          case "black":
-            open2 = bg ? "\x1B[40m" : "\x1B[30m";
-            break;
-          case "red":
-            open2 = bg ? "\x1B[41m" : "\x1B[31m";
-            break;
-          case "green":
-            open2 = bg ? "\x1B[42m" : "\x1B[32m";
-            break;
-          case "yellow":
-            open2 = bg ? "\x1B[43m" : "\x1B[33m";
-            break;
-          case "blue":
-            open2 = bg ? "\x1B[44m" : "\x1B[34m";
-            break;
-          case "magenta":
-            open2 = bg ? "\x1B[45m" : "\x1B[35m";
-            break;
-          case "cyan":
-            open2 = bg ? "\x1B[46m" : "\x1B[36m";
-            break;
-          case "white":
-            open2 = bg ? "\x1B[47m" : "\x1B[37m";
-            break;
-          case "gray":
-            open2 = bg ? "\x1B[100m" : "\x1B[90m";
-            break;
-          case "redbright":
-            open2 = bg ? "\x1B[101m" : "\x1B[91m";
-            break;
-          case "greenbright":
-            open2 = bg ? "\x1B[102m" : "\x1B[92m";
-            break;
-          case "yellowbright":
-            open2 = bg ? "\x1B[103m" : "\x1B[93m";
-            break;
-          case "bluebright":
-            open2 = bg ? "\x1B[104m" : "\x1B[94m";
-            break;
-          case "magentabright":
-            open2 = bg ? "\x1B[105m" : "\x1B[95m";
-            break;
-          case "cyanbright":
-            open2 = bg ? "\x1B[106m" : "\x1B[96m";
-            break;
-          case "whitebright":
-            open2 = bg ? "\x1B[107m" : "\x1B[97m";
-            break;
-          case "candy":
-            open2 = ["\x1B[31m", "\x1B[32m", "\x1B[33m", "\x1B[35m", "\x1B[36m", "\x1B[91m", "\x1B[92m", "\x1B[93m", "\x1B[94m", "\x1B[95m", "\x1B[96m"][Math.floor(Math.random() * 11)];
-            break;
-          default: {
-            let hex = color;
-            if (!HEXTEST.test(color)) {
-              return {
-                open: "",
-                close: ""
-              };
-            }
-            const rgb = Hex2rgb(hex);
-            if (support === 1) {
-              open2 = ansi_2562ansi_16(rgb2ansi256Code(rgb[0], rgb[1], rgb[2]), bg);
-            }
-            if (support === 2) {
-              open2 = rgb2ansi_256(rgb[0], rgb[1], rgb[2], bg);
-            }
-            if (support === 3) {
-              open2 = rgb2ansi_16m(rgb[0], rgb[1], rgb[2], bg);
-            }
-          }
-        }
-        return {
-          open: open2,
-          close
-        };
-      } else if (!OPTIONS.env) {
-        return {
-          open: "",
-          close: ""
-        };
-      } else {
-        if (!HEXTEST.test(color)) {
-          color = COLORS[color.toLowerCase()];
-          if (!color) {
-            return {
-              open: "",
-              close: ""
-            };
-          }
-        }
-        if (bg) {
-          return {
-            open: color,
-            close: ""
-          };
-        }
-        return {
-          open: `<span style="color:${color}">`,
-          close: "</span>"
-        };
-      }
-    };
-    module.exports = exports = {
-      HEXTEST,
-      Rgb2hsv,
-      Hsv2rgb,
-      Rgb2hex,
-      Hex2rgb,
-      Hsv2hsvRad,
-      HsvRad2hsv,
-      Hex2hsvRad,
-      HsvRad2hex,
-      rgb2ansi_16m,
-      rgb2ansi256Code,
-      rgb2ansi_256,
-      ansi_2562ansi_16,
-      get_term_color_support,
-      Color
-    };
-  }
-});
-
-// node_modules/cfonts/lib/Debugging.js
-var require_Debugging = __commonJS({
-  "node_modules/cfonts/lib/Debugging.js"(exports, module) {
-    "use strict";
-    var {
-      Color
-    } = require_Color();
-    var DEBUG = {
-      store: {
-        enabled: false,
-        level: 2
-      },
-      set enabled(value) {
-        this.store.enabled = value;
-      },
-      get enabled() {
-        return this.store.enabled;
-      },
-      set level(value) {
-        this.store.level = value;
-      },
-      get level() {
-        return this.store.level;
-      }
-    };
-    var Debugging = {
-      /**
-       * Return a headline preferably at the beginning of your app
-       *
-       * @param  {string}  text       - The sting you want to log
-       * @param  {number}  level      - The debug level. Show equal and greater levels. Default: 99
-       * @param  {boolean} debug      - Global debug mode on/off
-       * @param  {number}  debuglevel - Global debug level
-       */
-      headline: (text, level = 99, debug = DEBUG.enabled, debuglevel = DEBUG.level) => {
-        if (debug && level >= debuglevel) {
-          const {
-            open: open2,
-            close
-          } = Color("black", true);
-          console.log(`${open2}
-\x1B[1m \u2611  \x1B[22m ${text}${close}`);
-        }
-      },
-      /**
-       * Return a message to report starting a process
-       *
-       * @param  {string}  text       - The sting you want to log
-       * @param  {number}  level      - The debug level. Show equal and greater levels. Default: 99
-       * @param  {boolean} debug      - Global debug mode on/off
-       * @param  {number}  debuglevel - Global debug level
-       */
-      report: (text, level = 99, debug = DEBUG.enabled, debuglevel = DEBUG.level) => {
-        if (debug && level >= debuglevel) {
-          const {
-            open: blackbg_open,
-            close: blackbg_close
-          } = Color("black", true);
-          const {
-            open: green_open,
-            close: green_close
-          } = Color("green");
-          const {
-            open: white_open,
-            close: white_close
-          } = Color("white");
-          console.log(`${blackbg_open}
-\x1B[1m${green_open} \u2611  ${green_close}\x1B[22m ${white_open}${text}${white_close}${blackbg_close}`);
-        }
-      },
-      /**
-       * Return a message to report an error
-       *
-       * @param  {string}  text       - The sting you want to log
-       * @param  {number}  level      - The debug level. Show equal and greater levels. Default: 99
-       * @param  {boolean} debug      - Global debug mode on/off
-       * @param  {number}  debuglevel - Global debug level
-       */
-      error: (text, level = 99, debug = DEBUG.enabled, debuglevel = DEBUG.level) => {
-        if (debug && level >= debuglevel) {
-          const {
-            open: blackbg_open,
-            close: blackbg_close
-          } = Color("black", true);
-          const {
-            open: red_open,
-            close: red_close
-          } = Color("red");
-          const {
-            open: white_open,
-            close: white_close
-          } = Color("white");
-          console.error(`${blackbg_open}
-${red_open} \u2612  ${red_close} ${white_open}${text}${white_close}${blackbg_close}`);
-        }
-      }
-    };
-    module.exports = exports = {
-      DEBUG,
-      Debugging
-    };
-  }
-});
-
-// node_modules/cfonts/lib/Colorize.js
-var require_Colorize = __commonJS({
-  "node_modules/cfonts/lib/Colorize.js"(exports, module) {
-    "use strict";
-    var {
-      Debugging
-    } = require_Debugging();
-    var {
-      Color
-    } = require_Color();
-    var Colorize = (character, fontColors, optionColors) => {
-      Debugging.report(`Running Colorize`, 1);
-      if (character !== void 0) {
-        if (fontColors > 1) {
-          for (let i = 0; i < fontColors; i++) {
-            const color = optionColors[i] || "system";
-            const {
-              open: openNew,
-              close: closeNew
-            } = Color(color);
-            const open2 = new RegExp(`<c${i + 1}>`, "g");
-            const close = new RegExp(`</c${i + 1}>`, "g");
-            character = character.replace(open2, openNew);
-            character = character.replace(close, closeNew);
-          }
-        }
-        if (fontColors === 1) {
-          const color = optionColors[0] || "system";
-          const {
-            open: openNew,
-            close: closeNew
-          } = Color(color);
-          character = openNew + character + closeNew;
-        }
-      }
-      return character;
-    };
-    module.exports = exports = {
-      Colorize
-    };
-  }
-});
-
-// node_modules/cfonts/lib/AddLetterSpacing.js
-var require_AddLetterSpacing = __commonJS({
-  "node_modules/cfonts/lib/AddLetterSpacing.js"(exports, module) {
-    "use strict";
-    var {
-      Debugging
-    } = require_Debugging();
-    var {
-      Colorize
-    } = require_Colorize();
-    var AddLetterSpacing = (output, fontLines, fontLetterspace, fontColors, colors, letterSpacing) => {
-      Debugging.report(`Running AddLetterSpacing`, 1);
-      let lines = output.length - fontLines;
-      for (let i = lines; i < output.length; i++) {
-        let index = i - lines;
-        let space = Colorize(fontLetterspace[index], fontColors, colors);
-        if (space.length === 0 && letterSpacing > 0) {
-          Debugging.report(`AddLetterSpacing: Adding space to letter spacing`, 1);
-          space = " ";
-        }
-        output[i] += space.repeat(letterSpacing);
-      }
-      return output;
-    };
-    module.exports = exports = {
-      AddLetterSpacing
-    };
-  }
-});
-
-// node_modules/cfonts/lib/GetFirstCharacterPosition.js
-var require_GetFirstCharacterPosition = __commonJS({
-  "node_modules/cfonts/lib/GetFirstCharacterPosition.js"(exports, module) {
-    "use strict";
-    function GetFirstCharacterPosition(lines) {
-      const earliest = lines.reduce((prevLine, line) => line.length - line.trimStart().length < prevLine.length - prevLine.trimStart().length && line !== "" ? line : prevLine, lines[0]);
-      return earliest.length - earliest.trimStart().length;
-    }
-    module.exports = exports = {
-      GetFirstCharacterPosition
-    };
-  }
-});
-
-// node_modules/cfonts/lib/GetLongestLine.js
-var require_GetLongestLine = __commonJS({
-  "node_modules/cfonts/lib/GetLongestLine.js"(exports, module) {
-    "use strict";
-    var GetLongestLine = (lines) => lines.reduce((longestLine, line) => line.length > longestLine.length && line.length !== 0 ? line : longestLine, "");
-    module.exports = exports = {
-      GetLongestLine
-    };
-  }
-});
-
-// node_modules/cfonts/lib/Gradient.js
-var require_Gradient = __commonJS({
-  "node_modules/cfonts/lib/Gradient.js"(exports, module) {
-    "use strict";
-    var {
-      GetFirstCharacterPosition
-    } = require_GetFirstCharacterPosition();
-    var {
-      Color,
-      Hex2rgb,
-      Hex2hsvRad,
-      HsvRad2hex,
-      Rgb2hex
-    } = require_Color();
-    var {
-      GetLongestLine
-    } = require_GetLongestLine();
-    var {
-      GRADIENTS
-    } = require_constants3();
-    var {
-      Debugging
-    } = require_Debugging();
-    function GetLinear(pointA, pointB, n, steps) {
-      if (steps === 0) {
-        return pointB;
-      }
-      return pointA + n * ((pointB - pointA) / steps);
-    }
-    function GetTheta(fromTheta, toTheta, n, steps) {
-      const TAU = 2 * Math.PI;
-      let longDistance;
-      if (steps === 0) {
-        return toTheta;
-      }
-      if (fromTheta > toTheta) {
-        if (fromTheta - toTheta < Math.PI) {
-          longDistance = TAU - (fromTheta - toTheta);
-        } else {
-          longDistance = toTheta - fromTheta;
-        }
-      } else {
-        if (toTheta - fromTheta < Math.PI) {
-          longDistance = toTheta - fromTheta - TAU;
-        } else {
-          longDistance = -1 * (fromTheta - toTheta);
-        }
-      }
-      let result = fromTheta + n * (longDistance / steps);
-      if (result < 0) {
-        result += TAU;
-      }
-      if (result > TAU) {
-        result -= TAU;
-      }
-      return result;
-    }
-    function GetGradientColors(fromColor, toColor, steps) {
-      const [fromHRad, fromS, fromV] = Hex2hsvRad(fromColor);
-      const [toHRad, toS, toV] = Hex2hsvRad(toColor);
-      const hexColors = [];
-      for (let n = 0; n < steps; n++) {
-        const hRad = GetTheta(fromHRad, toHRad, n, steps - 1);
-        const s = GetLinear(fromS, toS, n, steps - 1);
-        const v = GetLinear(fromV, toV, n, steps - 1);
-        hexColors.push(HsvRad2hex(hRad, s, v));
-      }
-      return hexColors;
-    }
-    function PaintLines(lines, colors, firstCharacterPosition) {
-      Debugging.report(`Running PaintLines`, 1);
-      Debugging.report(colors, 2);
-      const space = " ".repeat(firstCharacterPosition);
-      return lines.map((line) => {
-        const coloredLine = line.slice(firstCharacterPosition).split("").map((char, i) => {
-          const {
-            open: open2,
-            close
-          } = Color(colors[i]);
-          return `${open2}${char}${close}`;
-        }).join("");
-        return `${space}${coloredLine}`;
-      });
-    }
-    function Color2hex(color) {
-      const colorMap = {
-        black: "#000000",
-        red: "#ff0000",
-        green: "#00ff00",
-        yellow: "#ffff00",
-        blue: "#0000ff",
-        magenta: "#ff00ff",
-        cyan: "#00ffff",
-        white: "#ffffff",
-        gray: "#808080",
-        grey: "#808080"
-      };
-      return colorMap[color] || color;
-    }
-    function GetGaps(points, steps) {
-      const gapSteps = Math.floor((steps - points.length) / (points.length - 1));
-      const rest = steps - (points.length + gapSteps * (points.length - 1));
-      const gaps = Array(points.length - 1).fill(gapSteps);
-      for (let i = 0; i < rest; i++) {
-        gaps[gaps.length - 1 - i]++;
-      }
-      return gaps;
-    }
-    function TransitionBetweenHex(fromHex, toHex, steps) {
-      const fromRgb = Hex2rgb(fromHex);
-      const toRgb = Hex2rgb(toHex);
-      const hexColors = [];
-      steps++;
-      for (let n = 1; n < steps; n++) {
-        const red = GetLinear(fromRgb[0], toRgb[0], n, steps);
-        const green = GetLinear(fromRgb[1], toRgb[1], n, steps);
-        const blue = GetLinear(fromRgb[2], toRgb[2], n, steps);
-        hexColors.push(Rgb2hex(red, green, blue));
-      }
-      return hexColors;
-    }
-    function Transition(colors, steps, gradients = GRADIENTS) {
-      let hexColors = [];
-      if (colors.length === 1) {
-        colors = gradients[colors[0].toLowerCase()];
-      } else {
-        colors = colors.map((color) => Color2hex(color));
-      }
-      const gaps = GetGaps(colors, steps);
-      if (steps <= 1) {
-        return [colors[colors.length - 1]];
-      }
-      for (let i = 0; i < colors.length; i++) {
-        const gap = gaps[i - 1];
-        if (colors[i - 1]) {
-          const gapColors = TransitionBetweenHex(colors[i - 1], colors[i], gap);
-          hexColors = [...hexColors, ...gapColors];
-        }
-        if (gap !== -1) {
-          hexColors.push(colors[i]);
-        }
-      }
-      return hexColors;
-    }
-    function PaintGradient({
-      output,
-      gradient,
-      lines,
-      lineHeight,
-      fontLines,
-      independentGradient,
-      transitionGradient
-    }) {
-      Debugging.report(`Running PaintGradient`, 1);
-      let newOutput = [];
-      if (transitionGradient) {
-        Debugging.report(`Gradient transition with colors: ${JSON.stringify(gradient)}`, 2);
-      } else {
-        Debugging.report(`Gradient start: ${gradient[0]} | Gradient end: ${gradient[1]}`, 2);
-      }
-      let firstCharacterPosition = GetFirstCharacterPosition(output);
-      let longestLine = GetLongestLine(output).length;
-      for (let i = 0; i < lines; i++) {
-        const start = i * (fontLines + lineHeight);
-        const end = fontLines + start;
-        const thisLine = output.slice(start, end);
-        if (independentGradient) {
-          firstCharacterPosition = GetFirstCharacterPosition(thisLine);
-          longestLine = GetLongestLine(thisLine).length;
-        }
-        const colorsNeeded = longestLine - firstCharacterPosition;
-        const linesInbetween = i === 0 ? [] : Array(lineHeight).fill("");
-        Debugging.report(`longestLine: ${longestLine} | firstCharacterPosition: ${firstCharacterPosition}`, 2);
-        const colors = transitionGradient ? Transition(gradient, colorsNeeded) : GetGradientColors(Color2hex(gradient[0]), Color2hex(gradient[1]), colorsNeeded);
-        newOutput = [...newOutput, ...linesInbetween, ...PaintLines(thisLine, colors, firstCharacterPosition)];
-      }
-      return newOutput;
-    }
-    module.exports = exports = {
-      GetLinear,
-      GetTheta,
-      GetGradientColors,
-      PaintLines,
-      Color2hex,
-      GetGaps,
-      TransitionBetweenHex,
-      Transition,
-      PaintGradient
-    };
-  }
-});
-
-// node_modules/cfonts/lib/CharLength.js
-var require_CharLength = __commonJS({
-  "node_modules/cfonts/lib/CharLength.js"(exports, module) {
-    "use strict";
-    var {
-      Debugging
-    } = require_Debugging();
-    var CharLength = (character, fontLines, letterSpacing) => {
-      Debugging.report(`Running CharLength`, 1);
-      let charWidth = 0;
-      for (let i = 0; i < fontLines; i++) {
-        let char = character[i].replace(/(<([^>]+)>)/gi, "");
-        if (char.length > charWidth) {
-          charWidth = char.length;
-        }
-      }
-      if (charWidth === 0 && letterSpacing > 0) {
-        Debugging.report(`CharLength: Adding space to letter spacing`, 1);
-        charWidth = 1;
-      }
-      return charWidth;
-    };
-    module.exports = exports = {
-      CharLength
-    };
-  }
-});
-
-// node_modules/cfonts/lib/CheckInput.js
-var require_CheckInput = __commonJS({
-  "node_modules/cfonts/lib/CheckInput.js"(exports, module) {
-    "use strict";
-    var {
-      HEXTEST,
-      Color
-    } = require_Color();
-    var {
-      COLORS,
-      BGCOLORS,
-      GRADIENTCOLORS,
-      GRADIENTS,
-      ALIGNMENT,
-      FONTFACES
-    } = require_constants3();
-    var CheckInput = (INPUT, userFont, userColors, userBackground, userAlign, userGradient, userTransitionGradient, userEnv, fontfaces = FONTFACES, colors = COLORS, bgcolors = BGCOLORS, gradientcolors = GRADIENTCOLORS, gradients = GRADIENTS, alignment = ALIGNMENT) => {
-      let result = {
-        message: "",
-        pass: true
-      };
-      const {
-        open: red_open,
-        close: red_close
-      } = Color("red");
-      const {
-        open: green_open,
-        close: green_close
-      } = Color("green");
-      if (INPUT === void 0 || INPUT === "") {
-        return {
-          message: "Please provide text to convert",
-          pass: false
-        };
-      }
-      if (Object.keys(fontfaces).indexOf(userFont.toLowerCase()) === -1) {
-        return {
-          message: `"${red_open}${userFont}${red_close}" is not a valid font option.
-Please use a font from the supported stack:
-${green_open}${Object.keys(fontfaces).map((font) => fontfaces[font]).join(", ")}${green_close}`,
-          pass: false
-        };
-      }
-      userColors.forEach((color) => {
-        if (Object.keys(colors).indexOf(color.toLowerCase()) === -1 && color !== "candy" && !HEXTEST.test(color)) {
-          result = {
-            message: `"${red_open}${color}${red_close}" is not a valid font color option.
-Please use a color from the supported stack or any valid hex color:
-${green_open}${Object.keys(colors).map((color2) => colors[color2]).join(", ")}, candy, "#3456ff", "#f80", etc...${green_close}`,
-            pass: false
-          };
-        }
-      });
-      if (Object.keys(bgcolors).indexOf(userBackground.toLowerCase()) === -1 && !HEXTEST.test(userBackground)) {
-        return {
-          message: `"${red_open}${userBackground}${red_close}" is not a valid background option.
-Please use a color from the supported stack:
-${green_open}${Object.keys(bgcolors).map((bgcolor) => bgcolors[bgcolor]).join(", ")}, "#3456ff", "#f80", etc...${green_close}`,
-          pass: false
-        };
-      }
-      if (alignment.indexOf(userAlign.toLowerCase()) === -1) {
-        return {
-          message: `"${red_open}${userAlign}${red_close}" is not a valid alignment option.
-Please use an alignment option from the supported stack:
-${green_open}${alignment.join(" | ")}${green_close}`,
-          pass: false
-        };
-      }
-      if (userGradient) {
-        if (userGradient.length === 1 && Object.keys(gradients).indexOf(userGradient[0].toLowerCase()) !== -1 && userTransitionGradient) {
-          return result;
-        } else {
-          if (userGradient.length < 2) {
-            return {
-              message: `"${red_open}${userGradient}${red_close}" is not a valid gradient option.
-Please pass in${userTransitionGradient ? " at least" : ""} two colors.`,
-              pass: false
-            };
-          }
-          if (userGradient.length !== 2 && !userTransitionGradient) {
-            return {
-              message: `"${red_open}${userGradient}${red_close}" is not a valid gradient option.
-Please pass in two colors.`,
-              pass: false
-            };
-          }
-          userGradient.forEach((color) => {
-            if (Object.keys(gradientcolors).indexOf(color.toLowerCase()) === -1 && !HEXTEST.test(color)) {
-              result = {
-                message: `"${red_open}${color}${red_close}" is not a valid gradient color option.
-Please use a color from the supported stack or any valid hex color:
-${green_open}${Object.keys(gradientcolors).map((color2) => colors[color2]).join(", ")}, "#3456ff", "#f80", etc...${green_close}`,
-                pass: false
-              };
-            }
-          });
-        }
-      }
-      if (userEnv !== "node" && userEnv !== "browser") {
-        return {
-          message: `"${red_open}${userEnv}${red_close}" is not a valid environment option.
-Please use only the supported options:
-${green_open}node | browser${green_close}`,
-          pass: false
-        };
-      }
-      return result;
-    };
-    module.exports = exports = {
-      CheckInput
-    };
-  }
-});
-
-// node_modules/cfonts/lib/CleanInput.js
-var require_CleanInput = __commonJS({
-  "node_modules/cfonts/lib/CleanInput.js"(exports, module) {
-    "use strict";
-    var {
-      CHARS
-    } = require_constants3();
-    var CleanInput = (INPUT, chars = CHARS) => {
-      if (typeof INPUT === "string") {
-        const clean = INPUT.replace(/(?:\r\n|\r|\n)/g, "|").split("").filter((char) => chars.includes(char.toUpperCase())).join("");
-        return clean;
-      } else {
-        return "";
-      }
-    };
-    module.exports = exports = {
-      CleanInput
-    };
-  }
-});
-
-// node_modules/function-bind/implementation.js
-var require_implementation = __commonJS({
-  "node_modules/function-bind/implementation.js"(exports, module) {
-    "use strict";
-    var ERROR_MESSAGE = "Function.prototype.bind called on incompatible ";
-    var toStr = Object.prototype.toString;
-    var max = Math.max;
-    var funcType = "[object Function]";
-    var concatty = function concatty2(a, b) {
-      var arr = [];
-      for (var i = 0; i < a.length; i += 1) {
-        arr[i] = a[i];
-      }
-      for (var j = 0; j < b.length; j += 1) {
-        arr[j + a.length] = b[j];
-      }
-      return arr;
-    };
-    var slicy = function slicy2(arrLike, offset) {
-      var arr = [];
-      for (var i = offset || 0, j = 0; i < arrLike.length; i += 1, j += 1) {
-        arr[j] = arrLike[i];
-      }
-      return arr;
-    };
-    var joiny = function(arr, joiner) {
-      var str = "";
-      for (var i = 0; i < arr.length; i += 1) {
-        str += arr[i];
-        if (i + 1 < arr.length) {
-          str += joiner;
-        }
-      }
-      return str;
-    };
-    module.exports = function bind(that) {
-      var target = this;
-      if (typeof target !== "function" || toStr.apply(target) !== funcType) {
-        throw new TypeError(ERROR_MESSAGE + target);
-      }
-      var args = slicy(arguments, 1);
-      var bound;
-      var binder = function() {
-        if (this instanceof bound) {
-          var result = target.apply(
-            this,
-            concatty(args, arguments)
-          );
-          if (Object(result) === result) {
-            return result;
-          }
-          return this;
-        }
-        return target.apply(
-          that,
-          concatty(args, arguments)
-        );
-      };
-      var boundLength = max(0, target.length - args.length);
-      var boundArgs = [];
-      for (var i = 0; i < boundLength; i++) {
-        boundArgs[i] = "$" + i;
-      }
-      bound = Function("binder", "return function (" + joiny(boundArgs, ",") + "){ return binder.apply(this,arguments); }")(binder);
-      if (target.prototype) {
-        var Empty = function Empty2() {
-        };
-        Empty.prototype = target.prototype;
-        bound.prototype = new Empty();
-        Empty.prototype = null;
-      }
-      return bound;
-    };
-  }
-});
-
-// node_modules/function-bind/index.js
-var require_function_bind = __commonJS({
-  "node_modules/function-bind/index.js"(exports, module) {
-    "use strict";
-    var implementation = require_implementation();
-    module.exports = Function.prototype.bind || implementation;
-  }
-});
-
-// node_modules/hasown/index.js
-var require_hasown = __commonJS({
-  "node_modules/hasown/index.js"(exports, module) {
-    "use strict";
-    var call = Function.prototype.call;
-    var $hasOwn = Object.prototype.hasOwnProperty;
-    var bind = require_function_bind();
-    module.exports = bind.call(call, $hasOwn);
-  }
-});
-
-// node_modules/is-accessor-descriptor/index.js
-var require_is_accessor_descriptor = __commonJS({
-  "node_modules/is-accessor-descriptor/index.js"(exports, module) {
-    "use strict";
-    var hasOwn = require_hasown();
-    var accessor = {
-      __proto__: null,
-      configurable: "boolean",
-      enumerable: "boolean",
-      get: "function",
-      set: "function"
-    };
-    module.exports = function isAccessorDescriptor(obj, prop) {
-      if (typeof prop === "string") {
-        var val = Object.getOwnPropertyDescriptor(obj, prop);
-        return typeof val !== "undefined";
-      }
-      if (!obj || typeof obj !== "object") {
-        return false;
-      }
-      if (hasOwn(obj, "value") || hasOwn(obj, "writable")) {
-        return false;
-      }
-      if ((!hasOwn(obj, "get") || typeof obj.get !== "function") && (!hasOwn(obj, "set") || typeof obj.set !== "function")) {
-        return false;
-      }
-      if (hasOwn(obj, "get") && typeof obj.get !== "function" && typeof obj.get !== "undefined" || hasOwn(obj, "set") && typeof obj.set !== "function" && typeof obj.set !== "undefined") {
-        return false;
-      }
-      for (var key in obj) {
-        if (hasOwn(obj, key) && hasOwn(accessor, key) && typeof obj[key] !== accessor[key] && typeof obj[key] !== "undefined") {
-          return false;
-        }
-      }
-      return true;
-    };
-  }
-});
-
-// node_modules/is-data-descriptor/index.js
-var require_is_data_descriptor = __commonJS({
-  "node_modules/is-data-descriptor/index.js"(exports, module) {
-    "use strict";
-    var hasOwn = require_hasown();
-    var data = {
-      __proto__: null,
-      configurable: "boolean",
-      enumerable: "boolean",
-      writable: "boolean"
-    };
-    module.exports = function isDataDescriptor(obj, prop) {
-      if (!obj || typeof obj !== "object") {
-        return false;
-      }
-      if (typeof prop === "string") {
-        var val = Object.getOwnPropertyDescriptor(obj, prop);
-        return typeof val !== "undefined";
-      }
-      if (!("value" in obj) && !("writable" in obj) || "get" in obj || "set" in obj) {
-        return false;
-      }
-      for (var key in obj) {
-        if (key !== "value" && hasOwn(obj, key) && hasOwn(data, key) && typeof obj[key] !== data[key] && typeof obj[key] !== "undefined") {
-          return false;
-        }
-      }
-      return true;
-    };
-  }
-});
-
-// node_modules/is-descriptor/index.js
-var require_is_descriptor = __commonJS({
-  "node_modules/is-descriptor/index.js"(exports, module) {
-    "use strict";
-    var isAccessor = require_is_accessor_descriptor();
-    var isData = require_is_data_descriptor();
-    module.exports = function isDescriptor(obj, key) {
-      if (!obj || typeof obj !== "object" && typeof obj !== "function") {
-        return false;
-      }
-      if ("get" in obj || "set" in obj) {
-        return isAccessor(obj, key);
-      }
-      return isData(obj, key);
-    };
-  }
-});
-
-// node_modules/define-property/index.js
-var require_define_property = __commonJS({
-  "node_modules/define-property/index.js"(exports, module) {
-    "use strict";
-    var isDescriptor = require_is_descriptor();
-    module.exports = function defineProperty(obj, prop, val) {
-      if (typeof obj !== "object" && typeof obj !== "function") {
-        throw new TypeError("expected an object or function.");
-      }
-      if (typeof prop !== "string") {
-        throw new TypeError("expected `prop` to be a string.");
-      }
-      if (isDescriptor(val) && ("set" in val || "get" in val)) {
-        return Object.defineProperty(obj, prop, val);
-      }
-      return Object.defineProperty(obj, prop, {
-        configurable: true,
-        enumerable: false,
-        writable: true,
-        value: val
-      });
-    };
-  }
-});
-
-// node_modules/is-buffer/index.js
-var require_is_buffer = __commonJS({
-  "node_modules/is-buffer/index.js"(exports, module) {
-    "use strict";
-    module.exports = function(obj) {
-      return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer);
-    };
-    function isBuffer(obj) {
-      return !!obj.constructor && typeof obj.constructor.isBuffer === "function" && obj.constructor.isBuffer(obj);
-    }
-    function isSlowBuffer(obj) {
-      return typeof obj.readFloatLE === "function" && typeof obj.slice === "function" && isBuffer(obj.slice(0, 0));
-    }
-  }
-});
-
-// node_modules/window-size/node_modules/kind-of/index.js
-var require_kind_of = __commonJS({
-  "node_modules/window-size/node_modules/kind-of/index.js"(exports, module) {
-    "use strict";
-    var isBuffer = require_is_buffer();
-    var toString = Object.prototype.toString;
-    module.exports = function kindOf(val) {
-      if (typeof val === "undefined") {
-        return "undefined";
-      }
-      if (val === null) {
-        return "null";
-      }
-      if (val === true || val === false || val instanceof Boolean) {
-        return "boolean";
-      }
-      if (typeof val === "string" || val instanceof String) {
-        return "string";
-      }
-      if (typeof val === "number" || val instanceof Number) {
-        return "number";
-      }
-      if (typeof val === "function" || val instanceof Function) {
-        return "function";
-      }
-      if (typeof Array.isArray !== "undefined" && Array.isArray(val)) {
-        return "array";
-      }
-      if (val instanceof RegExp) {
-        return "regexp";
-      }
-      if (val instanceof Date) {
-        return "date";
-      }
-      var type = toString.call(val);
-      if (type === "[object RegExp]") {
-        return "regexp";
-      }
-      if (type === "[object Date]") {
-        return "date";
-      }
-      if (type === "[object Arguments]") {
-        return "arguments";
-      }
-      if (type === "[object Error]") {
-        return "error";
-      }
-      if (isBuffer(val)) {
-        return "buffer";
-      }
-      if (type === "[object Set]") {
-        return "set";
-      }
-      if (type === "[object WeakSet]") {
-        return "weakset";
-      }
-      if (type === "[object Map]") {
-        return "map";
-      }
-      if (type === "[object WeakMap]") {
-        return "weakmap";
-      }
-      if (type === "[object Symbol]") {
-        return "symbol";
-      }
-      if (type === "[object Int8Array]") {
-        return "int8array";
-      }
-      if (type === "[object Uint8Array]") {
-        return "uint8array";
-      }
-      if (type === "[object Uint8ClampedArray]") {
-        return "uint8clampedarray";
-      }
-      if (type === "[object Int16Array]") {
-        return "int16array";
-      }
-      if (type === "[object Uint16Array]") {
-        return "uint16array";
-      }
-      if (type === "[object Int32Array]") {
-        return "int32array";
-      }
-      if (type === "[object Uint32Array]") {
-        return "uint32array";
-      }
-      if (type === "[object Float32Array]") {
-        return "float32array";
-      }
-      if (type === "[object Float64Array]") {
-        return "float64array";
-      }
-      return "object";
-    };
-  }
-});
-
-// node_modules/window-size/node_modules/is-number/index.js
-var require_is_number = __commonJS({
-  "node_modules/window-size/node_modules/is-number/index.js"(exports, module) {
-    "use strict";
-    var typeOf = require_kind_of();
-    module.exports = function isNumber(num) {
-      var type = typeOf(num);
-      if (type === "string") {
-        if (!num.trim()) return false;
-      } else if (type !== "number") {
-        return false;
-      }
-      return num - num + 1 >= 0;
-    };
-  }
-});
-
-// node_modules/window-size/utils.js
-var require_utils2 = __commonJS({
-  "node_modules/window-size/utils.js"(exports, module) {
-    "use strict";
-    var os2 = __require("os");
-    var isNumber = require_is_number();
-    var cp = __require("child_process");
-    function windowSize(options) {
-      options = options || {};
-      return streamSize(options, "stdout") || streamSize(options, "stderr") || envSize() || ttySize(options);
-    }
-    function streamSize(options, name) {
-      var stream = process && process[name] || options[name];
-      var size;
-      if (!stream) return;
-      if (typeof stream.getWindowSize === "function") {
-        size = stream.getWindowSize();
-        if (isSize(size)) {
-          return {
-            width: size[0],
-            height: size[1],
-            type: name
-          };
-        }
-      }
-      size = [stream.columns, stream.rows];
-      if (isSize(size)) {
-        return {
-          width: Number(size[0]),
-          height: Number(size[1]),
-          type: name
-        };
-      }
-    }
-    function envSize() {
-      if (process && process.env) {
-        var size = [process.env.COLUMNS, process.env.ROWS];
-        if (isSize(size)) {
-          return {
-            width: Number(size[0]),
-            height: Number(size[1]),
-            type: "process.env"
-          };
-        }
-      }
-    }
-    function ttySize(options, stdout) {
-      var tty2 = options.tty || __require("tty");
-      if (tty2 && typeof tty2.getWindowSize === "function") {
-        var size = tty2.getWindowSize(stdout);
-        if (isSize(size)) {
-          return {
-            width: Number(size[1]),
-            height: Number(size[0]),
-            type: "tty"
-          };
-        }
-      }
-    }
-    function winSize() {
-      if (os2.release().startsWith("10")) {
-        var cmd = "wmic path Win32_VideoController get CurrentHorizontalResolution,CurrentVerticalResolution";
-        var numberPattern = /\d+/g;
-        var code = cp.execSync(cmd).toString();
-        var size = code.match(numberPattern);
-        if (isSize(size)) {
-          return {
-            width: Number(size[0]),
-            height: Number(size[1]),
-            type: "windows"
-          };
-        }
-      }
-    }
-    function tputSize() {
-      try {
-        var buf = cp.execSync("tput cols && tput lines", { stdio: ["ignore", "pipe", process.stderr] });
-        var size = buf.toString().trim().split("\n");
-        if (isSize(size)) {
-          return {
-            width: Number(size[0]),
-            height: Number(size[1]),
-            type: "tput"
-          };
-        }
-      } catch (err) {
-      }
-    }
-    function isSize(size) {
-      return Array.isArray(size) && isNumber(size[0]) && isNumber(size[1]);
-    }
-    module.exports = {
-      get: windowSize,
-      env: envSize,
-      tty: ttySize,
-      tput: tputSize,
-      win: winSize
-    };
-  }
-});
-
-// node_modules/window-size/index.js
-var require_window_size = __commonJS({
-  "node_modules/window-size/index.js"(exports, module) {
-    "use strict";
-    var define2 = require_define_property();
-    var utils = require_utils2();
-    module.exports = utils.get();
-    if (module.exports) {
-      define2(module.exports, "get", utils.get);
-      define2(module.exports, "env", utils.env);
-      define2(module.exports, "tty", utils.tty);
-      define2(module.exports, "tput", utils.tput);
-      define2(module.exports, "win", utils.win);
-    }
-  }
-});
-
-// node_modules/cfonts/lib/Size.js
-var require_Size = __commonJS({
-  "node_modules/cfonts/lib/Size.js"(exports, module) {
-    "use strict";
-    var WinSize = require_window_size();
-    var Size = {
-      width: WinSize ? WinSize.width > 0 ? WinSize.width : 80 : 80,
-      height: WinSize ? WinSize.height > 0 ? WinSize.height : 24 : 24
-    };
-    module.exports = exports = {
-      Size
-    };
-  }
-});
-
-// node_modules/cfonts/lib/AlignText.js
-var require_AlignText = __commonJS({
-  "node_modules/cfonts/lib/AlignText.js"(exports, module) {
-    "use strict";
-    var {
-      Debugging
-    } = require_Debugging();
-    var {
-      Size
-    } = require_Size();
-    var AlignText = (output, lineLength, characterLines, align, size = Size) => {
-      Debugging.report(`Running AlignText`, 1);
-      let space = 0;
-      if (align === "center") {
-        space = Math.ceil((size.width - lineLength) / 2);
-        Debugging.report(`AlignText: Center lineLength: ${lineLength}, size.width: ${size.width}, space: ${space}`, 2);
-      }
-      if (align === "right") {
-        space = size.width - lineLength;
-        Debugging.report(`AlignText: Right lineLength: ${lineLength}, size.width: ${size.width}, space: ${space}`, 2);
-      }
-      if (space > 0) {
-        let lines = output.length - characterLines;
-        const spaces = " ".repeat(space);
-        for (let i = lines; i < output.length; i++) {
-          output[i] = spaces + output[i];
-        }
-      }
-      return output;
-    };
-    module.exports = exports = {
-      AlignText
-    };
-  }
-});
-
-// node_modules/cfonts/lib/AddLine.js
-var require_AddLine = __commonJS({
-  "node_modules/cfonts/lib/AddLine.js"(exports, module) {
-    "use strict";
-    var {
-      Debugging
-    } = require_Debugging();
-    var AddLine = (output, fontLines, FontBuffer, lineHeight) => {
-      Debugging.report(`Running AddLine`, 1);
-      if (output.length === 0) {
-        lineHeight = 0;
-      }
-      let lines = fontLines + output.length + lineHeight;
-      let length = output.length;
-      for (let i = length; i < lines; i++) {
-        let index = i - length;
-        if (index > lineHeight) {
-          output[i] = FontBuffer[index - lineHeight];
-        } else {
-          output[i] = "";
-        }
-      }
-      return output;
-    };
-    module.exports = exports = {
-      AddLine
-    };
-  }
-});
-
-// node_modules/cfonts/lib/AddChar.js
-var require_AddChar = __commonJS({
-  "node_modules/cfonts/lib/AddChar.js"(exports, module) {
-    "use strict";
-    var {
-      Debugging
-    } = require_Debugging();
-    var {
-      Colorize
-    } = require_Colorize();
-    var AddChar = (CHAR, output, fontLines, fontChars, fontColors, colors) => {
-      Debugging.report(`Running AddChar with "${CHAR}"`, 1);
-      let lines = output.length - fontLines;
-      for (let i = lines; i < output.length; i++) {
-        let index = i - lines;
-        output[i] += Colorize(fontChars[CHAR][index], fontColors, colors);
-      }
-      return output;
-    };
-    module.exports = exports = {
-      AddChar
-    };
-  }
-});
-
-// node_modules/cfonts/lib/GetFont.js
-var require_GetFont = __commonJS({
-  "node_modules/cfonts/lib/GetFont.js"(exports, module) {
-    "use strict";
-    var path = __require("path");
-    var {
-      Debugging
-    } = require_Debugging();
-    var GetFont = (font) => {
-      Debugging.report(`Running GetFont`, 1);
-      try {
-        const fontPath = path.join(process.cwd(), "bundle", "fonts", `${font}.json`);
-        let FONTFACE = __require(fontPath);
-        Debugging.report(`GetFont: Fontface path selected: "${font}.json"`, 2);
-        return FONTFACE;
-      } catch (error) {
-        Debugging.error(`Font file for "${font}" errored out: ${error}`, 2);
-        return false;
-      }
-    };
-    module.exports = exports = {
-      GetFont
-    };
-  }
-});
-
-// node_modules/cfonts/lib/Log.js
-var require_Log = __commonJS({
-  "node_modules/cfonts/lib/Log.js"(exports, module) {
-    "use strict";
-    var {
-      Color
-    } = require_Color();
-    var Log = {
-      /**
-       * Print error message to console.
-       *
-       * @param  {string} text - The sting you want to log
-       */
-      error: (text) => {
-        text = text.replace(/(?:\r\n|\r|\n)/g, "\n       ");
-        const {
-          open: open2,
-          close
-        } = Color("red");
-        console.error(`
- \x1B[1m${open2}Ouch:${close}\x1B[22m ${text}
-`);
-      }
-    };
-    module.exports = exports = {
-      Log
-    };
-  }
-});
-
-// node_modules/cfonts/lib/Render.js
-var require_Render = __commonJS({
-  "node_modules/cfonts/lib/Render.js"(exports, module) {
-    "use strict";
-    var {
-      AddLetterSpacing
-    } = require_AddLetterSpacing();
-    var {
-      Debugging,
-      DEBUG
-    } = require_Debugging();
-    var {
-      PaintGradient
-    } = require_Gradient();
-    var {
-      CharLength
-    } = require_CharLength();
-    var {
-      CheckInput
-    } = require_CheckInput();
-    var {
-      CleanInput
-    } = require_CleanInput();
-    var {
-      AlignText
-    } = require_AlignText();
-    var {
-      AddLine
-    } = require_AddLine();
-    var {
-      AddChar
-    } = require_AddChar();
-    var {
-      Options
-    } = require_Options();
-    var {
-      GetFont
-    } = require_GetFont();
-    var {
-      CHARS
-    } = require_constants3();
-    var {
-      Color
-    } = require_Color();
-    var {
-      Size
-    } = require_Size();
-    var {
-      Log
-    } = require_Log();
-    var Render = (input, SETTINGS = {}, debug = DEBUG.enabled, debuglevel = DEBUG.level, size = Size) => {
-      Debugging.report(`Running render`, 1);
-      DEBUG.enabled = debug;
-      DEBUG.level = debuglevel;
-      const INPUT = CleanInput(input, CHARS);
-      Options.reset();
-      Options.set = SETTINGS;
-      const OPTIONS = Options.get;
-      let output = [];
-      let lines = 0;
-      let FONTFACE = {};
-      const _isGoodHuman = CheckInput(INPUT, OPTIONS.font, OPTIONS.colors, OPTIONS.background, OPTIONS.align, OPTIONS.gradient, OPTIONS.transitionGradient, OPTIONS.env);
-      if (!_isGoodHuman.pass) {
-        Log.error(_isGoodHuman.message);
-        return false;
-      }
-      if (OPTIONS.gradient) {
-        OPTIONS.colors = [];
-      }
-      if (DEBUG.enabled) {
-        let outOption = `OPTIONS:
-  Text: ${INPUT}`;
-        for (let key in OPTIONS) {
-          outOption += `
-  Options.${key}: ${OPTIONS[key]}`;
-        }
-        Debugging.report(outOption, 3);
-      }
-      if (OPTIONS.env === "browser") {
-        size = {
-          ...size
-        };
-        size.width = OPTIONS.maxLength === 0 ? 999999999999 : OPTIONS.maxLength;
-      }
-      FONTFACE = GetFont(OPTIONS.font);
-      if (!FONTFACE) {
-        Log.error(`Font file for the font "${OPTIONS.font}" could not be found.
-Try reinstalling this package.`);
-        return false;
-      }
-      if (SETTINGS.letterSpacing === void 0) {
-        Debugging.report(`Looking up letter spacing from font face`, 1);
-        let width = 0;
-        FONTFACE.letterspace.forEach((item) => {
-          let char = item.replace(/(<([^>]+)>)/gi, "");
-          if (width < char.length) {
-            width = char.length;
-          }
-        });
-        Debugging.report(`Letter spacing set to font face default: "${width}"`, 2);
-        OPTIONS.letterSpacing = width;
-      }
-      let lineLength = CharLength(FONTFACE.buffer, FONTFACE.lines, OPTIONS);
-      let maxChars = 0;
-      let line_break = "\n";
-      if (OPTIONS.env === "node" && OPTIONS.rawMode === true) {
-        line_break = "\r\n";
-      }
-      output = AddLine([], FONTFACE.lines, FONTFACE.buffer, OPTIONS.lineHeight);
-      lines++;
-      for (let i = 0; i < INPUT.length; i++) {
-        let CHAR = INPUT.charAt(i).toUpperCase();
-        let lastLineLength = lineLength;
-        Debugging.report(`Character found in font: "${CHAR}"`, 2);
-        if (CHAR !== `|`) {
-          lineLength += CharLength(FONTFACE.chars[CHAR], FONTFACE.lines, OPTIONS);
-          lineLength += CharLength(FONTFACE.letterspace, FONTFACE.lines, OPTIONS) * OPTIONS.letterSpacing;
-        }
-        if (maxChars >= OPTIONS.maxLength && OPTIONS.maxLength != 0 || CHAR === `|` || lineLength > size.width) {
-          lines++;
-          Debugging.report(`NEWLINE: maxChars: ${maxChars}, OPTIONS.maxLength: ${OPTIONS.maxLength}, CHAR: ${CHAR}, lineLength: ${lineLength}, Size.width: ${size.width} `, 2);
-          if (OPTIONS.env === "node") {
-            output = AlignText(output, lastLineLength, FONTFACE.lines, OPTIONS.align, size);
-          }
-          lineLength += CharLength(FONTFACE.letterspace, FONTFACE.lines, OPTIONS) * OPTIONS.letterSpacing;
-          lineLength = CharLength(FONTFACE.buffer, FONTFACE.lines, OPTIONS);
-          if (CHAR !== `|`) {
-            lineLength += CharLength(FONTFACE.letterspace, FONTFACE.lines, OPTIONS) * OPTIONS.letterSpacing;
-            lineLength += CharLength(FONTFACE.chars[CHAR], FONTFACE.lines, OPTIONS);
-          }
-          maxChars = 0;
-          output = AddLine(output, FONTFACE.lines, FONTFACE.buffer, OPTIONS.lineHeight);
-        }
-        Debugging.report(`lineLength at: "${lineLength}"`, 2);
-        if (CHAR !== `|`) {
-          maxChars++;
-          output = AddLetterSpacing(output, FONTFACE.lines, FONTFACE.letterspace, FONTFACE.colors, OPTIONS.colors, OPTIONS.letterSpacing);
-          output = AddChar(CHAR, output, FONTFACE.lines, FONTFACE.chars, FONTFACE.colors, OPTIONS.colors);
-        }
-      }
-      if (OPTIONS.env === "node") {
-        output = AlignText(output, lineLength, FONTFACE.lines, OPTIONS.align, size);
-      }
-      if (OPTIONS.gradient) {
-        output = PaintGradient({
-          output,
-          gradient: OPTIONS.gradient,
-          lines,
-          lineHeight: OPTIONS.lineHeight,
-          fontLines: FONTFACE.lines,
-          independentGradient: OPTIONS.independentGradient,
-          transitionGradient: OPTIONS.transitionGradient
-        });
-      }
-      if (!OPTIONS.spaceless) {
-        if (OPTIONS.align === "top") {
-          output[output.length - 1] = `${output[output.length - 1]}${line_break}${line_break}${line_break}${line_break}`;
-        } else if (OPTIONS.align === "bottom") {
-          output[0] = `${line_break}${line_break}${line_break}${line_break}${output[0]}`;
-        } else {
-          output[0] = `${line_break}${line_break}${output[0]}`;
-          output[output.length - 1] = `${output[output.length - 1]}${line_break}${line_break}`;
-        }
-      }
-      if (OPTIONS.background !== "transparent" && OPTIONS.env === "node") {
-        const {
-          open: openNew,
-          close: closeNew
-        } = Color(OPTIONS.background, true);
-        output[0] = `${openNew}${line_break}${output[0]}`;
-        output[output.length - 1] = `${output[output.length - 1]}${closeNew}`;
-      }
-      let write = output.join(OPTIONS.env === "node" ? `${line_break}` : `<br>${line_break}`);
-      if (OPTIONS.env === "browser") {
-        const {
-          open: bgColor
-        } = Color(OPTIONS.background, true);
-        write = `<div style="font-family:monospace;white-space:pre;text-align:${OPTIONS.align};max-width:100%;overflow:scroll;background:${bgColor ? bgColor : "transparent"}">${write}</div>`;
-      }
-      return {
-        string: write,
-        array: output,
-        lines,
-        options: OPTIONS
-      };
-    };
-    module.exports = exports = {
-      Render
-    };
-  }
-});
-
-// node_modules/cfonts/lib/DisplayHelp.js
-var require_DisplayHelp = __commonJS({
-  "node_modules/cfonts/lib/DisplayHelp.js"(exports, module) {
-    "use strict";
-    var {
-      CLIOPTIONS
-    } = require_constants3();
-    var {
-      Render
-    } = require_Render();
-    var {
-      Color
-    } = require_Color();
-    var DisplayHelp = () => {
-      const {
-        string: headline
-      } = Render("cfonts", {
-        align: "left",
-        gradient: ["red", "green"]
-      });
-      console.log(` ${headline}This is a tool for sexy fonts in the console. Give your cli some love.
-
-Usage: cfonts "<value>" [option1] <input1> [option2] <input1>,<input2> [option3]
-Example: \x1B[1m$ cfonts "sexy font" -f chrome -a center -c red,green,gray\x1B[22m
-
-Options:
-`);
-      const {
-        open: open2,
-        close
-      } = Color("green");
-      Object.keys(CLIOPTIONS).forEach((option) => {
-        console.log(`\x1B[1m${option}, ${CLIOPTIONS[option].short}\x1B[22m`);
-        console.log(CLIOPTIONS[option].description);
-        console.log(`\x1B[1m$\x1B[22m cfonts ${CLIOPTIONS[option].example.replace(/\[green-open\]/g, open2).replace(/\[green-close\]/g, close)}
-`);
-      });
-    };
-    module.exports = exports = {
-      DisplayHelp
-    };
-  }
-});
-
-// node_modules/cfonts/lib/AddShortcuts.js
-var require_AddShortcuts = __commonJS({
-  "node_modules/cfonts/lib/AddShortcuts.js"(exports, module) {
-    "use strict";
-    var AddShortcuts = (options) => {
-      const flatOptions = Object.assign({}, options);
-      Object.keys(flatOptions).forEach((option) => {
-        flatOptions[option]._name = option;
-        flatOptions[flatOptions[option].short] = flatOptions[option];
-        if (flatOptions[option].fallback_shortcut) {
-          flatOptions[flatOptions[option].fallback_shortcut] = flatOptions[option];
-        }
-      });
-      return flatOptions;
-    };
-    module.exports = exports = {
-      AddShortcuts
-    };
-  }
-});
-
-// node_modules/cfonts/lib/ParseArgs.js
-var require_ParseArgs = __commonJS({
-  "node_modules/cfonts/lib/ParseArgs.js"(exports, module) {
-    "use strict";
-    var {
-      AddShortcuts
-    } = require_AddShortcuts();
-    var {
-      CLIOPTIONS
-    } = require_constants3();
-    var {
-      Debugging
-    } = require_Debugging();
-    var ParseArgs = (inputOptions = CLIOPTIONS, inputArgs = process.argv) => {
-      const parsedArgs = {
-        text: inputArgs[2]
-      };
-      Object.keys(inputOptions).forEach((option) => {
-        const name = option.replace("--", "");
-        parsedArgs[name] = inputOptions[option].default;
-      });
-      const args = inputArgs.splice(3);
-      const options = AddShortcuts(inputOptions);
-      const version_options = options["-v"];
-      if (inputArgs[2] === version_options._name || inputArgs[2] === version_options.short || inputArgs[2] === version_options.fallback_shortcut) {
-        parsedArgs.version = true;
-      }
-      const help_options = options["-h"];
-      if (inputArgs[2] === help_options._name || inputArgs[2] === help_options.short || inputArgs[2] === help_options.fallback_shortcut) {
-        parsedArgs.help = true;
-      }
-      for (let index = 0; args.length > index; index++) {
-        const option = options[args[index]];
-        if (option) {
-          const name = option._name.replace("--", "");
-          if (option.options !== void 0) {
-            index++;
-            const value = args[index];
-            parsedArgs[name] = value;
-          } else {
-            parsedArgs[name] = true;
-          }
-        } else {
-          Debugging.report(`The cli argument ${args[index]} was not found and ignored`, 2);
-        }
-      }
-      return parsedArgs;
-    };
-    module.exports = exports = {
-      ParseArgs
-    };
-  }
-});
-
-// node_modules/cfonts/lib/Say.js
-var require_Say = __commonJS({
-  "node_modules/cfonts/lib/Say.js"(exports, module) {
-    "use strict";
-    var {
-      Debugging,
-      DEBUG
-    } = require_Debugging();
-    var {
-      Render
-    } = require_Render();
-    var {
-      Size
-    } = require_Size();
-    var Say = (INPUT, SETTINGS = {}, debug = DEBUG.enabled, debuglevel = DEBUG.level, size = Size) => {
-      Debugging.report(`Running say`, 1);
-      DEBUG.enabled = debug;
-      DEBUG.level = debuglevel;
-      const write = Render(INPUT, SETTINGS, debug, debuglevel, size);
-      if (write) {
-        console.log(write.string);
-      }
-    };
-    module.exports = exports = {
-      Say
-    };
-  }
-});
-
-// node_modules/cfonts/lib/index.js
-var require_lib3 = __commonJS({
-  "node_modules/cfonts/lib/index.js"(exports, module) {
-    "use strict";
-    var {
-      DisplayVersion
-    } = require_DisplayVersion();
-    var {
-      DisplayHelp
-    } = require_DisplayHelp();
-    var {
-      CLIOPTIONS
-    } = require_constants3();
-    var {
-      Debugging
-    } = require_Debugging();
-    var {
-      ParseArgs
-    } = require_ParseArgs();
-    var {
-      Render
-    } = require_Render();
-    var {
-      Color
-    } = require_Color();
-    var {
-      Log
-    } = require_Log();
-    var {
-      Say
-    } = require_Say();
-    var Cli = (inputOptions = CLIOPTIONS, inputArgs = process.argv) => {
-      const args = ParseArgs(inputOptions, inputArgs);
-      Debugging.report(`OPTIONS:
-  CFonts.say("${args.text}", {
-    font: "${args.font}",
-    align: "${args.align}",
-    colors: ${args.colors ? JSON.stringify(args.colors.split(",")) : []},
-    background: "${args.background}",
-    letterSpacing: ${args["letter-spacing"]},
-    lineHeight: ${args["line-height"]},
-    spaceless: ${args.spaceless},
-    maxLength: ${args["max-length"]},
-    gradient: ${args.gradient},
-    independentGradient: ${args["independent-gradient"]},
-    transitionGradient: ${args["transition-gradient"]},
-    rawMode: ${args["raw-mode"]},
-    env: ${args.env},
-  }, ${args.debug}, ${args["debug-level"]} );`, 3, args.debug, args["debug-level"]);
-      if (args.help) {
-        DisplayHelp();
-        return;
-      }
-      if (args.version) {
-        DisplayVersion();
-        return;
-      }
-      if (!args.text) {
-        const {
-          open: green_open,
-          close: green_close
-        } = Color("green");
-        Log.error(`Please provide text to convert with ${green_open}cfonts "Text"${green_close}
-Run ${green_open}cfonts --help${green_close} for more infos`);
-        return;
-      }
-      Say(args.text, {
-        font: args.font,
-        align: args.align,
-        colors: args.colors ? args.colors.split(",") : [],
-        background: args.background,
-        letterSpacing: args["letter-spacing"],
-        lineHeight: args["line-height"],
-        spaceless: args.spaceless,
-        maxLength: args["max-length"],
-        gradient: args.gradient,
-        independentGradient: args["independent-gradient"],
-        transitionGradient: args["transition-gradient"],
-        rawMode: args["raw-mode"],
-        env: args.env
-      }, args.debug, args["debug-level"]);
-    };
-    module.exports = exports = {
-      render: Render,
-      say: Say,
-      Cli
-    };
   }
 });
 
@@ -84846,7 +82244,7 @@ var GeminiClient = class {
       }
       return stream;
     } catch (err) {
-      console.log("IN ERROR", err);
+      console.log("IN ERROR", err?.message);
       return err;
     }
   }
@@ -84862,7 +82260,9 @@ function getContent(event) {
   if (!parts) {
     return "";
   }
-  const text = parts.map((part) => part.text.trim().replace('"', ""));
+  const text = parts.map(
+    (part) => part.text.trim().replace('"', "")
+  );
   if (text.length === 0) {
     return "";
   }
@@ -84914,13 +82314,41 @@ function main() {
 }
 
 // packages/cli/src/components/inputPrompt.tsx
+var import_react23 = __toESM(require_react(), 1);
+
+// packages/cli/src/hooks/useTerminla.ts
 var import_react22 = __toESM(require_react(), 1);
+import process13 from "node:process";
+function useTerminal() {
+  const [size, setSize] = (0, import_react22.useState)({
+    columns: process13.stdout.columns || 20,
+    rows: process13.stdout.rows || 20
+  });
+  (0, import_react22.useEffect)(() => {
+    const updateSize = () => {
+      setSize(() => ({
+        columns: process13.stdout.columns || 20,
+        rows: process13.stdout.rows || 20
+      }));
+    };
+    process13.stdout.on("resize", updateSize);
+    return () => {
+      process13.stdout.off("resize", updateSize);
+    };
+  }, []);
+  return {
+    ...size
+  };
+}
+
+// packages/cli/src/components/inputPrompt.tsx
 var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
 function InputPrompt({ onSubmit, addItem }) {
-  const [prompt, setPrompt] = (0, import_react22.useState)("");
-  const [_error, setError] = (0, import_react22.useState)(false);
-  const [_errMessage, _setErrMessage] = (0, import_react22.useState)("");
-  const [_submitted, setSubmitted] = (0, import_react22.useState)(false);
+  const [prompt, setPrompt] = (0, import_react23.useState)("");
+  const [_error, setError] = (0, import_react23.useState)(false);
+  const [_errMessage, _setErrMessage] = (0, import_react23.useState)("");
+  const [_submitted, setSubmitted] = (0, import_react23.useState)(false);
+  const { columns: terminalWidth } = useTerminal();
   const placeholder = " Ask your question";
   use_input_default((input, key) => {
     if (key.return) {
@@ -84943,17 +82371,28 @@ function InputPrompt({ onSubmit, addItem }) {
       setPrompt((prev) => prev.slice(0, -1));
       return;
     }
+    if (prompt.trim().length === 0 && input === "/") {
+    }
     setPrompt((prev) => prev + input);
     setSubmitted(false);
   });
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Box_default, { borderStyle: "round", flexGrow: 1, flexDirection: "column", paddingLeft: 1, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Box_default, { flexDirection: "row", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { children: ">" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Box_default, { paddingLeft: 1, children: prompt ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { children: prompt }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { color: "gray", children: placeholder }) })
-  ] }) });
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    Box_default,
+    {
+      borderStyle: "round",
+      flexGrow: 1,
+      flexDirection: "column",
+      paddingLeft: 1,
+      children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Box_default, { flexDirection: "row", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { children: ">" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Box_default, { paddingLeft: 1, width: terminalWidth, children: prompt ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { children: prompt }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { color: "gray", children: placeholder }) })
+      ] })
+    }
+  ) });
 }
 
 // node_modules/ink-gradient/dist/index.js
-var import_react23 = __toESM(require_react(), 1);
+var import_react24 = __toESM(require_react(), 1);
 var import_prop_types = __toESM(require_prop_types(), 1);
 var import_gradient_string = __toESM(require_gradient_string(), 1);
 var Gradient = (props) => {
@@ -84969,7 +82408,7 @@ var Gradient = (props) => {
     throw new Error("Either `name` or `colors` prop must be provided");
   }
   const applyGradient = (text) => gradient.multiline(stripAnsi(text));
-  return import_react23.default.createElement(Transform, { transform: applyGradient }, props.children);
+  return import_react24.default.createElement(Transform, { transform: applyGradient }, props.children);
 };
 Gradient.propTypes = {
   children: import_prop_types.default.oneOfType([
@@ -84998,56 +82437,31 @@ Gradient.propTypes = {
 };
 var dist_default4 = Gradient;
 
-// node_modules/ink-big-text/dist/index.js
-var import_react24 = __toESM(require_react(), 1);
-var import_cfonts = __toESM(require_lib3(), 1);
-var defaultCFontProps = {
-  font: "block",
-  align: "left",
-  colors: ["system"],
-  backgroundColor: "transparent",
-  letterSpacing: 1,
-  lineHeight: 1,
-  space: true,
-  maxLength: 0
-};
-var BigText = ({ text, ...props }) => {
-  const cFontProps = { ...defaultCFontProps, ...props };
-  return import_react24.default.createElement(Text, null, import_cfonts.default.render(text, cFontProps).string);
-};
-var dist_default5 = BigText;
-
 // packages/cli/src/asciiText.ts
-var greaterThan = `
-\u2588\u2588\u2557\u2591\u2591
-\u255A\u2588\u2588\u2557\u2591
-\u2591\u255A\u2588\u2588\u2557
-\u2591\u2588\u2588\u2554\u255D
-\u2588\u2588\u2554\u255D\u2591
-\u255A\u2550\u255D\u2591\u2591`;
+var LOGO = `
+\u2588\u2588\u2557\u2591\u2591\u2003\u2003\u2588\u2588\u2557\u2591\u2591\u2588\u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2557\u2591\u2591\u2591\u2591\u2591\u2588\u2588\u2557\u2591\u2591\u2591\u2591\u2591\u2591\u2588\u2588\u2588\u2588\u2588\u2557\u2591
+\u255A\u2588\u2588\u2557\u2591\u2003\u2003\u2588\u2588\u2551\u2591\u2591\u2588\u2588\u2551\u2588\u2588\u2554\u2550\u2550\u2550\u2550\u255D\u2588\u2588\u2551\u2591\u2591\u2591\u2591\u2591\u2588\u2588\u2551\u2591\u2591\u2591\u2591\u2591\u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2557
+\u2591\u255A\u2588\u2588\u2557\u2003\u2003\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2557\u2591\u2591\u2588\u2588\u2551\u2591\u2591\u2591\u2591\u2591\u2588\u2588\u2551\u2591\u2591\u2591\u2591\u2591\u2588\u2588\u2551\u2591\u2591\u2588\u2588\u2551
+\u2591\u2588\u2588\u2554\u255D\u2003\u2003\u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2551\u2588\u2588\u2554\u2550\u2550\u255D\u2591\u2591\u2588\u2588\u2551\u2591\u2591\u2591\u2591\u2591\u2588\u2588\u2551\u2591\u2591\u2591\u2591\u2591\u2588\u2588\u2551\u2591\u2591\u2588\u2588\u2551
+\u2588\u2588\u2554\u255D\u2591\u2003\u2003\u2588\u2588\u2551\u2591\u2591\u2588\u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557\u255A\u2588\u2588\u2588\u2588\u2588\u2554\u255D
+\u255A\u2550\u255D\u2591\u2591\u2003\u2003\u255A\u2550\u255D\u2591\u2591\u255A\u2550\u255D\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u2591\u255A\u2550\u2550\u2550\u2550\u255D\u2591`;
 
 // packages/cli/src/header.tsx
 var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
 function Header() {
   return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Box_default, { flexDirection: "row", alignItems: "center", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(dist_default4, { name: "morning", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Text, { children: [
-        greaterThan,
-        " "
-      ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(dist_default4, { name: "morning", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(dist_default5, { text: "Hello", font: "block" }) })
-    ] }),
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Box_default, { flexDirection: "row", alignItems: "center", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(dist_default4, { name: "morning", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Text, { children: LOGO }) }) }),
     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(dist_default4, { name: "atlas", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Text, { bold: true, children: "\u2014\u2014\u2014Harish, Software Developer" }) })
   ] });
 }
 
 // packages/cli/src/hooks/useAuth.ts
 var import_react25 = __toESM(require_react(), 1);
-import process13 from "node:process";
+import process14 from "node:process";
 function useAuth({ config: config2 }) {
   const [authError, setAuthError] = (0, import_react25.useState)("");
   const [_authenticating, setIsAuthenticating] = (0, import_react25.useState)(false);
-  const GEMINI_API_KEY = process13.env["GEMINI_API_KEY"];
+  const GEMINI_API_KEY = process14.env["GEMINI_API_KEY"];
   (0, import_react25.useEffect)(() => {
     const authFlow = async () => {
       setIsAuthenticating(true);
@@ -85084,28 +82498,36 @@ function useGeminiStream(geminiClient, addItem) {
       setCurrentMessage(void 0);
     }
   }, [currentMessage, addItem, isStreaming]);
-  const submitQuery = (0, import_react26.useCallback)(async (query) => {
-    setIsResponding(true);
-    setIsStreaming(true);
-    const controller = new AbortController();
-    try {
-      const stream = geminiClient.sendMessageStream(query, controller);
-      await processGeminiStream(stream, controller);
-      setIsStreaming(false);
-    } catch (e) {
-      addItem({ type: "system", content: "An error occurred while processing your request." });
-      console.log("ERR", e);
-    } finally {
-      setIsResponding(false);
-    }
-  }, [geminiClient, isResponding, setIsResponding]);
+  const submitQuery = (0, import_react26.useCallback)(
+    async (query) => {
+      setIsResponding(true);
+      setIsStreaming(true);
+      const controller = new AbortController();
+      try {
+        const stream = geminiClient.sendMessageStream(query, controller);
+        await processGeminiStream(stream, controller);
+        setIsStreaming(false);
+      } catch (e) {
+        addItem({
+          type: "system",
+          content: "An error occurred while processing your request."
+        });
+        console.log("ERROR", e);
+      } finally {
+        setIsResponding(false);
+      }
+    },
+    [geminiClient, isResponding, setIsResponding]
+  );
   async function processGeminiStream(stream, _controller) {
     for await (const event of stream) {
-      setCurrentMessage((prev) => ({
-        ...prev,
-        ...event,
-        content: (prev?.content || "") + " " + event.content
-      }));
+      setCurrentMessage(
+        (prev) => ({
+          ...prev,
+          ...event,
+          content: (prev?.content || "") + event.content
+        })
+      );
     }
   }
   return {
@@ -85137,23 +82559,32 @@ function HistoryItem({ item }) {
     return null;
   }
   return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-    item.type === "user" && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Box_default, { borderColor: "blue", borderStyle: "round", flexDirection: "row", paddingX: 1, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Text, { children: [
-        "> ",
-        " "
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { children: item.content })
-    ] }),
-    item.type === "gemini" && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Box_default, { marginLeft: 1, marginBottom: 1, gap: 1, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Text, { color: "green", children: [
+    item.type === "user" && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+      Box_default,
+      {
+        borderColor: "blue",
+        borderStyle: "round",
+        flexDirection: "row",
+        paddingX: 1,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { children: "> " }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { wrap: "wrap", children: item.content })
+        ]
+      }
+    ),
+    item.type === "gemini" && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Box_default, { marginBottom: 1, gap: 1, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Box_default, { width: 2, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Text, { color: "green", children: [
         " ",
         "\u2726"
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { children: item.content })
+      ] }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Box_default, { flexGrow: 1, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { wrap: "wrap", children: item.content }) })
     ] }),
-    item.type === "system" && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Box_default, { marginLeft: 1, marginBottom: 1, gap: 1, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { color: "red", children: "\u2726" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { children: item.content })
+    item.type === "system" && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Box_default, { marginBottom: 1, gap: 1, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Box_default, { width: 2, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(Text, { color: "green", children: [
+        " ",
+        "\u2726"
+      ] }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Box_default, { flexGrow: 1, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Text, { wrap: "wrap", children: item.content }) })
     ] })
   ] });
 }
@@ -85388,466 +82819,6 @@ object-assign/index.js:
   (c) Sindre Sorhus
   @license MIT
   *)
-
-cfonts/lib/constants.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * Constants
-   *   CHARS
-   *   COLORS
-   *   BGCOLORS
-   *   GRADIENTCOLORS
-   *   ALIGNMENT
-   *   FONTFACES
-   *   CLIOPTIONS
-   *   PACKAGE
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/DisplayVersion.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * DisplayVersion
-   *   Display the version of this package
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/Options.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * Options
-   *   Merge user settings with default options
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/Color.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * HEXTEST                - Regex to see if a string is a hex color
-   * Rgb2hsv                - Converts an RGB color value to HSV
-   * Hsv2rgb                - Converts an HSV color value to RGB
-   * Rgb2hex                - Converts RGB to HEX
-   * Hex2rgb                - Convert HEX to RGB
-   * Hsv2hsvRad             - Convert HSV coordinate to HSVrad (degree to radian)
-   * HsvRad2hsv             - Convert HSVrad color to HSV (radian to degree)
-   * Hex2hsvRad             - Convert HEX to HSVrad
-   * HsvRad2hex             - Convert HSVrad to HEX
-   * rgb2ansi_16m -         - Convert RGB values to ANSI16 million colors - truecolor
-   * rgb2ansi256Code        - Convert RGB values to ANSI256 escape code
-   * rgb2ansi_256           - Convert RGB values to ANSI256
-   * ansi_2562ansi_16       - Convert ANSI256 code values to ANSI16
-   * get_term_color_support - Detect the ANSI support for the current terminal taking into account env vars NO_COLOR and FORCE_COLOR
-   * Color                  - Abstraction for coloring hex-, keyword- and background-colors
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/Debugging.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * Debugging
-   *   Debugging prettiness
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/Colorize.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * Colorize
-   *   Replace placeholders with color information
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/AddLetterSpacing.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * AddLetterSpacing
-   *   Add letter spacing for the next character
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/GetFirstCharacterPosition.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * GetFirstCharacterPosition
-   *   Get the position of the first character out of all strings inside an array
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/GetLongestLine.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * GetLongestLine
-   *   Return the longest line of an Array
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/Gradient.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * GetLinear            - Interpolate a linear path from a number to another number
-   * GetTheta             - Interpolate a radial path from a number to another number
-   * GetGradientColors    - Generate the most colorful delta between two colors
-   * PaintLines           - Take a bunch of lines and color them in the colors provided
-   * Color2hex            - Make sure a color is hex
-   * GetGaps              - Calculate the gaps between an array of points
-   * TransitionBetweenHex - Generate colors between two given colors
-   * Transition           - Generate n colors between x colors
-   * PaintGradient        - Paint finished output in a gradient
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/CharLength.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * CharLength
-   *   Return the max width of a character by looking at its longest line
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/CheckInput.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * CheckInput
-   *   Check input for human errors
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/CleanInput.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * CleanInput
-   *   Filter only allowed character
-   *
-   **************************************************************************************************************************************************************)
-
-define-property/index.js:
-  (*!
-   * define-property <https://github.com/jonschlinkert/define-property>
-   *
-   * Copyright (c) 2015, 2017, Jon Schlinkert.
-   * Released under the MIT License.
-   *)
-
-is-buffer/index.js:
-  (*!
-   * Determine if an object is a Buffer
-   *
-   * @author   Feross Aboukhadijeh <https://feross.org>
-   * @license  MIT
-   *)
-
-is-number/index.js:
-  (*!
-   * is-number <https://github.com/jonschlinkert/is-number>
-   *
-   * Copyright (c) 2014-2015, Jon Schlinkert.
-   * Licensed under the MIT License.
-   *)
-
-window-size/utils.js:
-window-size/index.js:
-  (*!
-   * window-size <https://github.com/jonschlinkert/window-size>
-   *
-   * Copyright (c) 2014-2017, Jon Schlinkert.
-   * Released under the MIT License.
-   *)
-
-cfonts/lib/Size.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * Size
-   *   Abstraction for windows size
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/AlignText.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * AlignText
-   *   Calculate the spaces to be added to the left of each line to align them either center or right
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/AddLine.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * AddLine
-   *   Add a new line to the output array
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/AddChar.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * AddChar
-   *   Add a new character to the output array
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/GetFont.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * GetFont
-   *   Get a selected JSON font-file object
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/Log.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * Log
-   *   Logging prettiness
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/Render.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * Render
-   *   Main method to get the ANSI output for a string
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/DisplayHelp.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * DisplayHelp
-   *   Display the help generated from our CLIOPTIONS
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/AddShortcuts.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * AddShortcuts
-   *   Flatten the shortcuts in our cli options object
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/ParseArgs.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * ParseArgs
-   *   Parse cli arguments into a nice object
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/Say.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * Say
-   *   Print to console
-   *
-   **************************************************************************************************************************************************************)
-
-cfonts/lib/index.js:
-  (***************************************************************************************************************************************************************
-   *
-   * cfonts
-   *
-   * Sexy fonts for the console. (CLI output)
-   *
-   * @license     https://github.com/dominikwilkowski/cfonts/blob/released/LICENSE  GNU GPL-3.0-or-later
-   * @author      Dominik Wilkowski  hi@dominik-wilkowski.com
-   * @repository  https://github.com/dominikwilkowski/cfonts
-   *
-   * Cli
-   *   Run cli commands
-   *
-   **************************************************************************************************************************************************************)
 
 @google/genai/dist/node/index.mjs:
 @google/genai/dist/node/index.mjs:

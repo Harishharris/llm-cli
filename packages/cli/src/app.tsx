@@ -24,8 +24,6 @@ export default function App({ config }: Props) {
 		addItem
 	)
 
-	// console.log("MESSAGES", currentMessage)
-
 	return (
 		<>
 			<Static key={0} items={[
@@ -42,20 +40,14 @@ export default function App({ config }: Props) {
 			]}>
 				{(item) => item}
 			</Static >
-			{/* {currentMessage?.map((item, index) => (
-				<HistoryItem
-					item={item}
-					key={index}
-				/>
-			))} */}
 			<HistoryItem item={currentMessage} key={Date.now()} />
 			{authError && <AuthError authError={authError} />}
-			{!authError && !isStreaming && <InputPrompt
-				onSubmit={submitQuery}
-				addItem={addItem}
-			/>}
+			{!authError && !isStreaming && 
+				<InputPrompt
+					onSubmit={submitQuery}
+					addItem={addItem}
+				/>
+			}
 		</>
 	);
 }
-
-

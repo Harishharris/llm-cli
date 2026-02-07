@@ -1,6 +1,6 @@
-import { Config } from './config.js';
-import { getContentGenerator } from './contentGenerator.js';
-import { ContentGeneratorConfig } from './contentGenerator.js';
+import {Config} from './config.js';
+import {getContentGenerator} from './contentGenerator.js';
+import {ContentGeneratorConfig} from './contentGenerator.js';
 
 export class GeminiClient {
 	private contentGeneratorConfig?: ContentGeneratorConfig;
@@ -20,23 +20,23 @@ export class GeminiClient {
 		try {
 			const stream = await this.contentGenerator.generateContentStream({
 				model: this.model,
-				contents: [{ role: "user", parts: [{ text: request }] }],
+				contents: [{role: 'user', parts: [{text: request}]}],
 				config: {
 					thinkingConfig: {
 						thinkingBudget: 0,
-					}
-				}
-			})
+					},
+				},
+			});
 			for await (const event of stream) {
-				const content = getContent(event)
+				const content = getContent(event);
 				yield {
-					type: "gemini",
+					type: 'gemini',
 					content,
-				}
+				};
 			}
 			return stream;
-		} catch (err) {
-			console.log("IN ERROR", err)
+		} catch (err: any) {
+			console.log('IN ERROR', err?.message.error.message);
 			return err;
 		}
 	}
@@ -54,7 +54,9 @@ function getContent(event: any) {
 	if (!parts) {
 		return '';
 	}
-	const text = parts.map((part: any) => (part.text as string).trim().replace('"', ''))
+	const text = parts.map((part: any) =>
+		(part.text as string).trim().replace('"', ''),
+	);
 	if (text.length === 0) {
 		return '';
 	}

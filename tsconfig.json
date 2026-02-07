@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"outDir": "dist",
 		"composite": true,
+		"jsx": "react-jsx"
 	},
 	"include": [
 		"packages/*/src",
@@ -11,4 +12,5 @@
 	"exclude": [
 		"dist"
 	]
+	
 }
