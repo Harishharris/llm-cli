@@ -17,7 +17,7 @@ const readFileToolDeclaration = {
 		required: ["path"],
 	},
 };
-
+// hiii
 // Wrap it in the expected 'tools' array structure.
 // This 'tools' array will be passed directly in the generateContentStream request.
 const tools = [
